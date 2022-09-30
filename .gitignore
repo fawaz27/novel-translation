@@ -2,3 +2,5 @@ node_modules
 .env
 frontend/node_modules
 frontend/src/assets/img
+backend/node_modules
+backend/src/public
