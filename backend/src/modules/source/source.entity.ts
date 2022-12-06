@@ -13,10 +13,10 @@ export class Source{
     @Column({ type: 'varchar', length: 200 })
     public link : string;
 
-    @Column({ type: 'varchar', length: 200 })
+    @Column({ type: 'varchar', length: 50 })
     public type : string;
 
-    @Column({ type: 'varchar', length: 200 })
+    @Column({ type: 'varchar', length: 10 })
     public lang : string;
 
     @OneToMany(()=>Novel,(novel)=>novel.source)

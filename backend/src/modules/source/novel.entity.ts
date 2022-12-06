@@ -1,7 +1,8 @@
 
 
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Chapter } from "./chapter.entity";
+import { Chapter } from "../chapter/chapter.entity";
+import { Library } from "../library/library.entity";
 import { Source } from "./source.entity";
 
 @Entity()
@@ -19,10 +20,10 @@ export class Novel{
     @Column({ type: 'varchar', length: 200 })
     public link : string;
 
-    @Column({ type: 'varchar', length: 200 })
+    @Column({ type: 'varchar', length: 50 })
     public status : string;
 
-    @Column({ type: 'varchar', length: 200 })
+    @Column({ type: 'varchar', length: 10})
     public lang : string;
 
     @Column( "simple-array",{array:true})
@@ -45,6 +46,9 @@ export class Novel{
     
     @ManyToOne(()=>Source,(source)=>source.novels)
     public source: Source;
+
+    @ManyToOne(()=>Library,(library)=>library.novels)
+    public library: Library;
     
 
 

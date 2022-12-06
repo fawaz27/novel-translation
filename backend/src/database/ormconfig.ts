@@ -1,8 +1,9 @@
 import { DataSourceOptions } from 'typeorm';
-import { Chapter } from '../models/chapter.entity';
-import { Novel } from '../models/novel.entity';
-import { Source } from '../models/source.entity';
-import { User } from '../models/user.entity';
+import { Chapter } from '../modules/chapter/chapter.entity';
+import { Library } from '../modules/library/library.entity';
+import { Novel } from '../modules/source/novel.entity';
+import { Source } from '../modules/source/source.entity';
+import { User } from '../modules/user/user.entity';
 
 const config: DataSourceOptions = {
     type: 'postgres',
@@ -11,12 +12,7 @@ const config: DataSourceOptions = {
     username: process.env.USERNAME_DB,
     password: process.env.PASSWORD_DB,
     database: process.env.NAME_DB,
-    entities: [
-        User,
-        Novel,
-        Chapter,
-        Source
-    ],
+    entities: [User,Novel,Chapter,Source,Library],
     synchronize: true,
     
 };

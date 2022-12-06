@@ -1,9 +1,9 @@
-import BadRequestException from "../exceptions/BadRequestException";
-import VerificationTokenPayload from "../interfaces/verificationTokenPayload.interface";
-import EmailService from "./email.service";
-import { UserService } from "./user.service";
+import BadRequestException from "../../exceptions/BadRequestException";
+import VerificationTokenPayload from "../../interfaces/verificationTokenPayload.interface";
+import EmailService from "../email/email.service";
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import { UserService } from "../user/user.service";
+
 
 
 export default class ResetPasswordService{

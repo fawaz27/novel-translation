@@ -1,12 +1,13 @@
 import express from 'express';
-import { AuthentificationService } from '../services/authentification.service';
-import validationMiddleware from '../middlewares/validationMiddleware';
-import logInDto from '../dto/login.dto';
-import CreateUserDto from '../dto/user.dto';
-import EmailConfirmationService from '../services/emailConfirmation.service';
-import ForgotPasswordDto from '../dto/forgotPassword.dto';
-import ResetPasswordService from '../services/resetPassword.service';
-import { nextTick } from 'process';
+import { AuthentificationService } from './authentification.service';
+import validationMiddleware from '../../middlewares/validationMiddleware';
+import logInDto from './login.dto';
+import CreateUserDto from '../user/user.dto';
+import EmailConfirmationService from '../email/emailConfirmation.service';
+import ForgotPasswordDto from '../password/forgotPassword.dto';
+import ResetPasswordService from '../password/resetPassword.service';
+
+
 
 
 export class AuthentificationController{
@@ -76,9 +77,7 @@ export class AuthentificationController{
             response.setHeader('Set-Cookie', [result]);
             response.status(200).send();
         } catch (error) {
-            console.log(error);
-            
-            
+            console.log(error);     
         }
         
         
@@ -97,11 +96,5 @@ export class AuthentificationController{
             next(error);
         }
     }
-
-    
-
-
-
-
 }
 

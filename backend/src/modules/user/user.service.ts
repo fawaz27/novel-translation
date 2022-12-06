@@ -1,11 +1,10 @@
 
 import { Repository } from 'typeorm';
-import { AppDataSource } from '../database/AppDataSource';
-import UserWithThatEmailNotExistsException from '../exceptions/user/UserWithThatEmailNotExistsException';
-import UserWithThatIDNotExistsException from '../exceptions/user/UserWithThatIDNotExistsException';
-import { User } from '../models/user.entity';
+import { AppDataSource } from '../../database/AppDataSource';
+import { User } from './user.entity';
 import bcrypt from 'bcrypt';
-import InternalErrorException from '../exceptions/InternalErrorException';
+import NotFoundException from '../../exceptions/NotFoundException';
+
 export class UserService{
    
     private userRepository:Repository<User> ;
@@ -17,12 +16,11 @@ export class UserService{
     public async getUserByEmail(email:string){
      
         const user = await this.userRepository.findOne(({where:{email:email}}));
-        console.log(user);
         
         if(user)
             return user;
         else
-            throw new UserWithThatEmailNotExistsException(email);       
+            throw new NotFoundException(`User with email ${email} not found.`);       
     }
 
     public async getUserById(id:number){
@@ -31,7 +29,16 @@ export class UserService{
         if(user)
             return user;
         else
-            throw new UserWithThatIDNotExistsException(id);
+            throw new NotFoundException('User not found.');
+    }
+
+    public async getAllUsers(){
+        const users = await this.userRepository.find();
+
+        if(users && users.length!=0)
+            return users;
+        else
+            throw new NotFoundException('No Users found.');
     }
 
     public async markEmailAsConfirmed(email: string) {

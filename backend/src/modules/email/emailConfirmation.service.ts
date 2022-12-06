@@ -1,8 +1,8 @@
 import EmailService from "./email.service";
 import jwt from 'jsonwebtoken';
-import VerificationTokenPayload from "../interfaces/verificationTokenPayload.interface";
-import BadRequestException from "../exceptions/BadRequestException";
-import { UserService } from "./user.service";
+import VerificationTokenPayload from "../../interfaces/verificationTokenPayload.interface";
+import BadRequestException from "../../exceptions/BadRequestException";
+import { UserService } from "../user/user.service";
 
 export default class EmailConfirmationService{
 
@@ -30,8 +30,11 @@ export default class EmailConfirmationService{
             subject: "Email confirmation",
             text: text
         });
+
         console.log(result);
-        
+        console.log('-------------------------------------------------------------');
+        console.log(token);
+          
         return result;
     }
 

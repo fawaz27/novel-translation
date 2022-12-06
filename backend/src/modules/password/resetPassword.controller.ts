@@ -1,7 +1,7 @@
 import express, { Router } from 'express'
-import resetPasswordDto from '../dto/resetPassword.dto';
-import validationMiddleware from '../middlewares/validationMiddleware';
-import ResetPasswordService from '../services/resetPassword.service';
+import resetPasswordDto from './resetPassword.dto';
+import validationMiddleware from '../../middlewares/validationMiddleware';
+import ResetPasswordService from './resetPassword.service';
 
 export class ResetPasswordController{
 

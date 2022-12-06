@@ -1,5 +1,6 @@
 import {IsString,IsNotEmpty, Validate, IsEmail, MinLength, MaxLength} from 'class-validator'
-import { Role } from '../utils/validator-role';
+import { Role } from '../../utils/validator-role';
+
 
 class CreateUserDto
 {

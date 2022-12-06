@@ -5,12 +5,11 @@ import { AppDataSource } from '../database/AppDataSource'
 import WrongAuthenticationTokenException from '../exceptions/WrongAuthenticationTokenException';
 import AuthenticationTokenMissingException from '../exceptions/AuthenticationTokenMissingException';
 import RequestWithUser from '../interfaces/requestWithUser.interface';
-import { User } from '../models/user.entity';
+import { User } from '../modules/user/user.entity';
 
 async function authMiddleware(request: RequestWithUser, response: Response, next: NextFunction)
 {
-   //console.log(request);
-   //request.cookies={};
+   
     const cookies = request.cookies;
     // console.log(cookies);
     
@@ -38,4 +37,4 @@ async function authMiddleware(request: RequestWithUser, response: Response, next
 }
 
 
-export default authMiddleware;
+export default authMiddleware as unknown as (req:Request,res:Response,net:NextFunction)=>{};

@@ -1,10 +1,11 @@
 import 'dotenv/config';
 import 'reflect-metadata';
 import App from './app';
-import { AuthentificationController } from './controllers/authentification.controller';
-import { EmailConfirmationController } from './controllers/emailConfirmation.controller';
-import { ResetPasswordController } from './controllers/resetPassword.controller';
+import { AuthentificationController } from './modules/authentication/authentification.controller';
+import { EmailConfirmationController } from './modules/email/emailConfirmation.controller';
+import { SourceController } from './modules/source/source.controller';
 import { AppDataSource } from './database/AppDataSource';
+import { ResetPasswordController } from './modules/password/resetPassword.controller';
 
 (async () => {
 
@@ -21,7 +22,8 @@ import { AppDataSource } from './database/AppDataSource';
     const app = new App([
       new AuthentificationController(),
       new EmailConfirmationController(),
-      new ResetPasswordController()
+      new ResetPasswordController(),
+      new SourceController()
     ]);
     
     

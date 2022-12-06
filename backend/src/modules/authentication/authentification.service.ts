@@ -1,16 +1,15 @@
-import { AppDataSource } from '../database/AppDataSource';
+import { AppDataSource } from '../../database/AppDataSource';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import WrongCredentialsException from '../exceptions/WrongCredentialsException';
-import TokenData from '../interfaces/tokenData.interface';
-import DataStoredInToken from '../interfaces/dataStoredInToken.interface';
-import InternalErrorException from '../exceptions/InternalErrorException';
-import { User } from '../models/user.entity';
-import logInDto from '../dto/login.dto';
-import CreateUserDto from '../dto/user.dto';
-import EmailOrUsernameAlreadyExistsException from '../exceptions/user/UserWithThatEmailAlreadyExistsException';
-import UserWithThatEmailAlreadyExistsException from '../exceptions/user/UserWithThatEmailAlreadyExistsException';
-import UserWithThatUsernameAlreadyExistsException from '../exceptions/user/UserWithThatUsernameAlreadyExistsException';
+import WrongCredentialsException from '../../exceptions/WrongCredentialsException';
+import TokenData from '../../interfaces/tokenData.interface';
+import DataStoredInToken from '../../interfaces/dataStoredInToken.interface';
+import InternalErrorException from '../../exceptions/InternalErrorException';
+import { User } from '../user/user.entity';
+import logInDto from './login.dto';
+import CreateUserDto from '../user/user.dto';
+import ConflictException from '../../exceptions/ConflictException';
+
 
 export class AuthentificationService{
 
@@ -30,10 +29,10 @@ export class AuthentificationService{
         const result2 = await this.userRepository.findOne( {where:{username:user.username}});
 
         if (result1) {
-            throw new UserWithThatEmailAlreadyExistsException(user.email);
+            throw new ConflictException(`User with email ${user.email} already exists.`);
         } 
         else if(result2){
-            throw new UserWithThatUsernameAlreadyExistsException(user.email);
+            throw new ConflictException(`User with username ${user.username} already exists.`);
         } 
         else {
 

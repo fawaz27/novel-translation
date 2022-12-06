@@ -1,5 +1,6 @@
-import { Column ,Entity,JoinTable,ManyToMany,PrimaryGeneratedColumn } from 'typeorm'
-import { Novel } from './novel.entity';
+import { Column ,Entity,JoinColumn,OneToOne,PrimaryGeneratedColumn } from 'typeorm'
+import { Library } from '../library/library.entity';
+import { Novel } from '../source/novel.entity';
 
 @Entity('users')
 export  class User{
@@ -30,9 +31,9 @@ export  class User{
     @Column({ type: 'varchar', length: 300 , nullable:false })
     public role: string;
 
-    @ManyToMany(()=>Novel)
-    @JoinTable()
-    public novels:Novel[];
+    @OneToOne(()=>Library,(library)=>library.user)
+    @JoinColumn()
+    public library : Library;
 
 
 }

@@ -1,19 +1,23 @@
 import express, { Router } from 'express';
-import ConfirmEmailDto from '../dto/confirmEmail.dto';
-import RequestWithUser from '../interfaces/requestWithUser.interface';
-import authMiddleware from '../middlewares/authMiddleware';
-import validationMiddleware from '../middlewares/validationMiddleware';
-import EmailConfirmationService from '../services/emailConfirmation.service';
+import ConfirmEmailDto from './confirmEmail.dto';
+import RequestWithUser from '../../interfaces/requestWithUser.interface';
+import authMiddleware from '../../middlewares/authMiddleware';
+import validationMiddleware from '../../middlewares/validationMiddleware';
+import EmailConfirmationService from './emailConfirmation.service';
 import{Request,Response,NextFunction} from 'express';
+import { LibraryService } from '../library/library.service';
 
 export class EmailConfirmationController{
 
     public path:string = '/email-confirmation';
     public router:Router = express.Router();
     private emailConfirmationService:EmailConfirmationService;
+    private libraryService:LibraryService;
+
 
     constructor(){      
         this.emailConfirmationService = new EmailConfirmationService();
+        this.libraryService = new LibraryService();
         this.initializeRoutes();
     }
 
@@ -24,7 +28,7 @@ export class EmailConfirmationController{
         this.router
             .post(
                 `${this.path}/resend-confirmation-link`,
-                authMiddleware as unknown as (req:Request,res:Response,net:NextFunction)=>{},
+                authMiddleware ,
                 this.resendConfirmationLink as unknown as (req:Request,res:Response,net:NextFunction)=>{}
             );
 
@@ -37,6 +41,7 @@ export class EmailConfirmationController{
         try {
             const email = await this.emailConfirmationService.decodeConfirmationToken(confirmationData.token);
             const result = await this.emailConfirmationService.confirmEmail(email);
+            await this.libraryService.addLibraryWithEmail(email);
             response.status(200).send(result);
         } catch (error) {
             next(error);
