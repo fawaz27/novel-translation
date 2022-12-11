@@ -30,10 +30,9 @@ export class SourceService{
 
         const sources  = await this.sourceRepository.find();
         
-        if(sources && sources.length!=0)
+        if(sources)
             return sources;
-        else
-            throw new NotFoundException('No Sources found.');
+        
     }
 
     public async getSourceById(id:number){

@@ -23,7 +23,7 @@ export class UserService{
             throw new NotFoundException(`User with email ${email} not found.`);       
     }
 
-    public async getUserById(id:number){
+    public async getUserById(id:number){    
         const user = await this.userRepository.findOne(({where:{id:id}}));
 
         if(user)
@@ -35,10 +35,9 @@ export class UserService{
     public async getAllUsers(){
         const users = await this.userRepository.find();
 
-        if(users && users.length!=0)
+        if(users)
             return users;
-        else
-            throw new NotFoundException('No Users found.');
+    
     }
 
     public async markEmailAsConfirmed(email: string) {

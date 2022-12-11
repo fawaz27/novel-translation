@@ -3,9 +3,10 @@ import { AppDataSource } from "../../database/AppDataSource";
 import CreateNovelDto from "./novel.dto";
 import InternalErrorException from "../../exceptions/InternalErrorException";
 import NotFoundException from "../../exceptions/NotFoundException";
-import { Novel } from "../source/novel.entity";
+import { Novel } from "./novel.entity";
 import { LibraryService } from "../library/library.service";
 import { SourceService } from "../source/source.service";
+import { UserService } from "../user/user.service";
 
 
 export class NovelService{
@@ -13,11 +14,14 @@ export class NovelService{
     private novelRepository:Repository<Novel> ;
     private sourceService : SourceService;
     private libraryService:LibraryService;
+    private userService: UserService;
 
     constructor(){
         this.novelRepository = AppDataSource.getRepository(Novel);
+        this.userService = new UserService();
         this.sourceService = new SourceService();
         this.libraryService = new LibraryService();
+
     }
 
     public async addNovelToLibrary(id_library:number, id_source:number,novel:CreateNovelDto){
@@ -36,18 +40,37 @@ export class NovelService{
             throw new InternalErrorException();
     }
 
-//vérifier si il y exception pour id_source invalid
+    public async getNovelsOfUser(userId:number){
 
-    public async getNovelbyId(id_library:number,id_source:number,id_novel:number){
+        const user = await this.userService.getUserById(userId);
+        const library = await this.libraryService.getLibraryOfUser(user.id);
+        const novels = await this.getNovelsOfLirbrary(library.id);
 
-        await this.sourceService.getSourceById(id_source);
+        return novels;
+
+    }
+
+    public async getNovelsOfLirbrary(id_library:number){
+
+        const novels = await this.novelRepository
+                        .createQueryBuilder("novel")
+                        .leftJoinAndSelect("novel.source","source")
+                        .leftJoinAndSelect("novel.library","library")
+                        .where("library.id = :id_library",{id_library})
+                        .getMany();
+
+        if(novels)
+            return novels;
+        
+    }
+
+    public async getNovelbyId(id_novel:number){
+
         const novel = await this.novelRepository
                         .createQueryBuilder("novel")
                         .leftJoinAndSelect("novel.source","source")
                         .leftJoinAndSelect("novel.library","library")
                         .where("novel.id = :id_novel",{id_novel})
-                        .andWhere("source.id = :id_source",{id_source})
-                        .andWhere("library.id = :id_library",{id_library})
                         .getOne();
                         
         if(novel)
@@ -57,19 +80,16 @@ export class NovelService{
             
     }
 
-    public async updateNovel(id_library:number,id_source:number,id_novel:number,novel:CreateNovelDto){
+    public async updateNovel(id_novel:number,novel:CreateNovelDto){
 
-        await this.sourceService.getSourceById(id_source);
-        const validIds = await this.novelRepository
+        const ifExist = await this.novelRepository
                             .createQueryBuilder("novel")
                             .leftJoinAndSelect("novel.source","source")
                             .leftJoinAndSelect("novel.library","library")
                             .where("novel.id = :id_novel",{id_novel})
-                            .andWhere("source.id = :id_source",{id_source})
-                            .andWhere("library.id = :id_library",{id_library})
                             .getOne();
         
-        if(validIds){
+        if(ifExist){
             const updatedNovel = this.novelRepository.update(id_novel,novel);
 
             if (updatedNovel) 
@@ -83,36 +103,25 @@ export class NovelService{
     } 
 
 
-    public async deleteNovel(id_library:number,id_source:number,id_novel:number){
+    public async deleteNovel(id_novel:number){
 
-        await this.sourceService.getSourceById(id_source);
-
-        const validIds = await this.novelRepository
+        const novelToDelete = await this.novelRepository
                             .createQueryBuilder("novel")
                             .leftJoinAndSelect("novel.source","source")
                             .leftJoinAndSelect("novel.library","library")
                             .where("novel.id = :id_novel",{id_novel})
-                            .andWhere("source.id = :id_source",{id_source})
-                            .andWhere("library.id = :id_library",{id_library})
                             .getOne();
         
-        if(validIds){
-            const novelToDelete  = await this.novelRepository.findOne({where:{id:id_source}});
-
-            if(novelToDelete){
-                const result = await this.novelRepository.remove(novelToDelete);
-                
-                if(result)
-                    return id_novel;
-                else
-                    throw new InternalErrorException();
-            }
-            else    
-                throw new NotFoundException('Novel not found.')
+        if(novelToDelete){
+            const result = await this.novelRepository.remove(novelToDelete);
+    
+            if(result)
+                return id_novel;
+            else
+                throw new InternalErrorException();
         }
         else    
             throw new NotFoundException('Novel not found.');
-
     }
 
 }

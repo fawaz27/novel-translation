@@ -26,9 +26,9 @@ class CreateNovelDto
     @MaxLength(10)
     public lang : string;
 
-    @IsString({ each: true })
+    @IsString()
     @IsNotEmpty()
-    public genres : string[];
+    public genres : string;
 
     @IsString()
     @MaxLength(200)

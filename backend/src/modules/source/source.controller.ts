@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import CreateSourceDto from './source.dto';
 import authMiddleware from '../../middlewares/authMiddleware';
 import validationMiddleware from '../../middlewares/validationMiddleware';
@@ -18,12 +18,18 @@ export class SourceController{
 
     private initializeRoutes(){
         this.router
-            .all(this.path,authMiddleware)
+            .all(this.path,authMiddleware )
             .get(this.path,this.getAllSources)
-            .post(this.path,adminMiddleware,validationMiddleware(CreateSourceDto),this.addSource);
+            .post(
+                this.path,
+                adminMiddleware ,
+                validationMiddleware(CreateSourceDto),this.addSource);
         
         this.router
-            .all(`${this.path}/*`,authMiddleware,adminMiddleware)
+            .all(
+                `${this.path}/*`,
+                authMiddleware ,
+                adminMiddleware )
             .put(`${this.path}/:id`,validationMiddleware(CreateSourceDto),this.updateSource)
             .delete(`${this.path}/:id`,this.deleteSource);
 

@@ -20,6 +20,7 @@ export class AuthentificationController{
 
     constructor(){      
       this.authService = new AuthentificationService();
+      this.emailConfirmationService = new EmailConfirmationService();
       this.resetPasswordService = new ResetPasswordService();
       this.initializeRoutes();
     }
@@ -42,8 +43,6 @@ export class AuthentificationController{
         try {
             const created = await this.authService.register(UserData);
             const result = await  this.emailConfirmationService.sendVerificationLink(created.email);
-            console.log(result);
-            
             response.status(201).send(created);
    
         } catch (error) {

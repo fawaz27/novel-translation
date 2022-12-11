@@ -6,6 +6,7 @@ import { EmailConfirmationController } from './modules/email/emailConfirmation.c
 import { SourceController } from './modules/source/source.controller';
 import { AppDataSource } from './database/AppDataSource';
 import { ResetPasswordController } from './modules/password/resetPassword.controller';
+import { NovelController } from './modules/novel/novel.controller';
 
 (async () => {
 
@@ -23,7 +24,8 @@ import { ResetPasswordController } from './modules/password/resetPassword.contro
       new AuthentificationController(),
       new EmailConfirmationController(),
       new ResetPasswordController(),
-      new SourceController()
+      new SourceController(),
+      new NovelController()
     ]);
     
     

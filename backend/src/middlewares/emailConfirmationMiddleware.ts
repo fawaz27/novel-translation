@@ -6,6 +6,6 @@ import RequestWithUser from "../interfaces/requestWithUser.interface";
 async function emailConfirmationMiddleware(request: RequestWithUser, response: Response, next: NextFunction){
 
     if(!request.user?.isEmailConfirmed)
-        throw new UnauthorizedException('Confirm your email first');
+        next(new UnauthorizedException('Confirm your email first')) ;
     next();
 }

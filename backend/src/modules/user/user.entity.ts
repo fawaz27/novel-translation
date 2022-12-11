@@ -1,6 +1,6 @@
 import { Column ,Entity,JoinColumn,OneToOne,PrimaryGeneratedColumn } from 'typeorm'
 import { Library } from '../library/library.entity';
-import { Novel } from '../source/novel.entity';
+import { Novel } from '../novel/novel.entity';
 
 @Entity('users')
 export  class User{

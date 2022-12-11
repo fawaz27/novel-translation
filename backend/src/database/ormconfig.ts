@@ -1,7 +1,7 @@
 import { DataSourceOptions } from 'typeorm';
 import { Chapter } from '../modules/chapter/chapter.entity';
 import { Library } from '../modules/library/library.entity';
-import { Novel } from '../modules/source/novel.entity';
+import { Novel } from '../modules/novel/novel.entity';
 import { Source } from '../modules/source/source.entity';
 import { User } from '../modules/user/user.entity';
 

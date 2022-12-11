@@ -28,7 +28,7 @@ export class EmailConfirmationController{
         this.router
             .post(
                 `${this.path}/resend-confirmation-link`,
-                authMiddleware ,
+                authMiddleware,
                 this.resendConfirmationLink as unknown as (req:Request,res:Response,net:NextFunction)=>{}
             );
 

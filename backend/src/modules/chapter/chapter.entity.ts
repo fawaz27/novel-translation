@@ -1,7 +1,7 @@
 
 
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Novel } from "../source/novel.entity";
+import { Novel } from "../novel/novel.entity";
 
 @Entity()
 export class Chapter{

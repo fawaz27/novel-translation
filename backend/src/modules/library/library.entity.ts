@@ -1,5 +1,5 @@
 import { Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Novel } from "../source/novel.entity";
+import { Novel } from "../novel/novel.entity";
 import { User } from "../user/user.entity";
 
 

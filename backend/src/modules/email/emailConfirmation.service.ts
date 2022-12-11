@@ -15,6 +15,7 @@ export default class EmailConfirmationService{
     }
 
     public async sendVerificationLink(email: string) {
+        
         const payload: VerificationTokenPayload = { email };
         const expiresIn = process.env.JWT_VERIFICATION_TOKEN_EXPIRATION_TIME;
         const secret =  process.env.JWT_VERIFICATION_TOKEN_SECRET;
@@ -22,10 +23,9 @@ export default class EmailConfirmationService{
         const token = jwt.sign(payload,secret as string,{ expiresIn:`${expiresIn}s` });
 
         const url = `${process.env.EMAIL_CONFIRMATION_URL}?token=${token}`;
-        const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
-    
+        const text = `Welcome to the application. To confirm the email address, click here: ${url}`;        
         const result = await this.emailService.sendMail({
-            from:'"NovelsTranslate" <boukarifawas27@gmail.com>',
+            from:`"NovelsTranslate" <${process.env.EMAIL_USER}>`,
             to: email,
             subject: "Email confirmation",
             text: text

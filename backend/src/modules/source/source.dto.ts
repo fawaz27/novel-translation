@@ -12,7 +12,6 @@ class CreateSourceDto
     @MaxLength(200)
     public link : string;
 
-    @IsNotEmpty({message: ' please the type is required'})
     @IsString()
     @MaxLength(50)
     public type : string;
@@ -21,8 +20,6 @@ class CreateSourceDto
     @IsString()
     @MaxLength(10)
     public lang : string;
-
-    
 
 }
 

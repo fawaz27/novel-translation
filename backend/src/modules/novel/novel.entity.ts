@@ -3,7 +3,7 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Chapter } from "../chapter/chapter.entity";
 import { Library } from "../library/library.entity";
-import { Source } from "./source.entity";
+import { Source } from "../source/source.entity";
 
 @Entity()
 export class Novel{
@@ -26,8 +26,8 @@ export class Novel{
     @Column({ type: 'varchar', length: 10})
     public lang : string;
 
-    @Column( "simple-array",{array:true})
-    public genres : string[];
+    @Column({ type: 'varchar', length: 500 })
+    public genres : string;
 
     @Column({ type: 'varchar', length: 200 })
     public infos : string;
