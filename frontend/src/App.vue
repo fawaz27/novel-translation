@@ -36,7 +36,7 @@ export default {
   .main-app{
     height: 100vh;
     width:100vh;
-
+    margin-top: 70px;
   }
 
   *{

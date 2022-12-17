@@ -5,3 +5,4 @@ frontend/src/assets/img
 backend/node_modules
 backend/src/public
 db.dbm
+cliff-height-timer

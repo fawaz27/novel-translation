@@ -1,5 +1,5 @@
 <template>
-    <div>
+    
         <div class="header-home">
 
             <div class="selectsource">
@@ -10,10 +10,10 @@
                     
                 </select>
             </div>
-            
+            <hr style="margin-top: 20px;">
         </div>
         
-    </div>
+   
     
     
 </template>
@@ -43,10 +43,10 @@ export default {
 
 <style scoped>
     .header-home{
-        
         width: 100%;
         padding:24px;
         position: absolute;
+        margin-top:40px
     }
 
     .header-home #select_source{

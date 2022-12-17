@@ -1,25 +1,12 @@
 <template>
-    <div class="content-home">
-        <hr>
-
+    <div class="cards">
+       
         <div class="container">
 
-            <div class="row">
-                <div class="card" v-for="(novel,index) in novels"  v-bind:key="index">
-                    <div class="card-body">
-                        <img :src="novel.img" :alt="novel.name"  width="150" height="200">
-                    </div>
-                    <div class="card-footer">
-                        <div class="caption">
-                            <h3>
-                                <font style="vertical-align: inherit;">{{novel.name}}</font>
-                            </h3>
-                        </div>
-
-                    </div>   
-                </div>
-
-                
+            <div class="novels">
+                <div class="content" v-for="(novel,index) in novels"  v-bind:key="index">
+                    <card-component :link="novel.img" :novelname="novel.name"></card-component>
+                </div>          
             </div>
             
 
@@ -31,6 +18,7 @@
 </template>
 
 <script>
+import CardComponent from './Card.vue';
 
 export default {
  
@@ -39,64 +27,68 @@ export default {
    data () {
     return {
       novels: [
-        {img:"https://www.japanread.cc/media/cache/manga_medium/images/mangas/cover/002.png",name:"Tales of Demons and Gods"},
-        {img:"https://www.japanread.cc/media/cache/manga_medium/images/mangas/cover/5f7bd82e659fa728498660.png",name:"Tale of a Scribe Who Retires to the Countryside"},
-        {img:"https://www.japanread.cc/media/cache/manga_medium/images/mangas/cover/5f47280e9916c898155595.jpg",name:"Solo Leveling"},
-        {img:"https://www.japanread.cc/media/cache/manga_medium/images/mangas/cover/627f7d7f103d9828056414.png",name:"Martial Peak"},
-        {img:"https://www.japanread.cc/media/cache/manga_medium/images/mangas/cover/5f6b00c2840ed416048069.jpg",name:"I have a Dragon in My Body"},
-        {img:"https://www.japanread.cc/media/cache/manga_medium/images/mangas/cover/60afb93735ffc292276252.png",name:"Martial Art Reigns"},
-        {img:"https://www.japanread.cc/media/cache/manga_medium/images/mangas/cover/5f21807a6b7dc573137089.jpg",name:"Ao ashi"},
-        {img:"https://www.japanread.cc/media/cache/manga_medium/images/mangas/cover/002.png",name:"Star Martial God Technique"},
-        {img:"https://www.japanread.cc/media/cache/manga_medium/images/mangas/cover/612faeac081d2357004918.jpg",name:"Versatile Mage"},
-        {img:"https://www.japanread.cc/media/cache/manga_medium/images/mangas/cover/5ce1901c1d4d1191397194.jpg",name:"Blue Lock"},
-        {img:"https://www.japanread.cc/media/cache/manga_medium/images/mangas/cover/5fa7cd5c7cdf7568162979.jpg",name:"Mercenary Enrollement"},
-    
-    
+        {img:"https://novelfull.com/uploads/thumbs/library-of-heavens-path-d6292facbc-2239c49aee6b961904acf173b7e4602a.jpg",name:"Library of Heaven’s Path"},
+        {img:"https://novelfull.com/uploads/thumbs/keyboard-immortal-07e9c3a2c3-99d73ad4eaaa291fc4d7569dc8aae41b.jpg",name:"Keyboard Immortal"},
+        {img:"https://novelfull.com/uploads/thumbs/god-emperor-f0302229e9-2239c49aee6b961904acf173b7e4602a.jpg",name:"God Emperor"},
+        {img:"https://novelfull.com/uploads/thumbs/martial-peak-685987ce01-2239c49aee6b961904acf173b7e4602a.jpg",name:"Martial Peak"},
+        {img:"https://novelfull.com/uploads/thumbs/versatile-mage-b17368e6b8-2239c49aee6b961904acf173b7e4602a.jpg",name:"Versatile Mage"},
+        {img:"https://novelfull.com/uploads/thumbs/against-the-gods-f4e50e3f24-2239c49aee6b961904acf173b7e4602a.jpg",name:"Against the Gods"},
+        {img:"https://novelfull.com/uploads/thumbs/martial-god-asura-4fbd99df7b-2239c49aee6b961904acf173b7e4602a.jpg",name:"Martial God Asura"},
+        {img:"https://novelfull.com/uploads/thumbs/zhan-yue-22aa372bec-1f94e70a643b46dcbefa65dce618d3fd.jpg",name:"Zhan Yue"},
+        {img:"https://novelfull.com/uploads/thumbs/chaotic-sword-god-713c12b5af-2239c49aee6b961904acf173b7e4602a.jpeg",name:"Chaotic Sword God"},
+        {img:"https://novelfull.com/uploads/thumbs/reverend-insanity-82661d911a-2239c49aee6b961904acf173b7e4602a.jpg",name:"Reverend Insanity"},
+        
     ],
     }
   },
+  components :{
+    CardComponent
+  }
   
 }
 </script>
 
 <style scoped>
-    .content-home{
-        width: 100%;
+
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .cards{
         position: absolute;
-        top: 200px;
+        width: 100%;
+        text-align: center;
+        margin-top:120px
+       
     }
-    .container{
-        /* 
-        margin: 50px auto; */
+
+   .container{
+        
         width: 90%;
-        padding-left: 10%;
-        
-        
-
-
-        
+        margin: 50px auto;
 
     }
-    .row{
+    .novels{
         display: flex;
-        justify-content:flex-start ;
+        flex-direction: column;
+        justify-content: space-around;
         flex-flow: wrap;
     }
-     .card{
-        margin: 50px 0px 15px 15px ;
+     .content{
+        width: 20%;
         background: #fff;
-        
-        transition: 0.3s;
-        max-height: 200px;
-        max-width: 150px;
+        padding: 10px 10px;
     
     }
 
     .card-body{
         width: 100%;
-        text-align: center;
-        
-    } 
+        text-align: center;  
+    }
+    .image{
+        transition: 0.3s;
+    }
 
     .caption{
         padding: 5px;
@@ -104,40 +96,47 @@ export default {
         line-height: 18px;
         font-family: 'Roboto Condensed',sans-serif;
     }
-    /* .card-header{
-        text-align: center;
-        padding: 50px 10px;
-        background: linear-gradient(to right,#ff416c,#ff4b2b);
-        color: #fff;
-    } */
 
-    /* .card-body{
-        padding: 30px 20px;
-        text-align: center;
-        font-size: 18px;
-    } */ 
-
-    /* .card-body .btn{
-        display: block;
-        color: #fff;
-        text-align: center;
-        background: linear-gradient(to right,#ff416c,#ff4b2b);
-        margin-top: 30px;
-        text-decoration: none;
-        padding: 10px 5px;
-
-
-    } */
-
-    .card:hover{
+    .image:hover{
         transform: scale(1.05);
         box-shadow: 0 0 40px -10px rgba(0,0,0,0.25);
     }
+    
+    @media screen and (max-width:1080px) {
+        
+        .content{
+            width: 30%;
+        }
+        
+    }
 
+    @media screen and (max-width:900px) {
+        .content{
+            width: 40%;
+        }
+        
+    }
 
-    @media screen and (max-width:1000px) {
-        .card{
-            max-width: 150px;
+    @media screen and (max-width:620px) {
+        .container{
+            width: 100%;
+
+        }
+        .content{
+            width: 40%;
+            
+        }
+        
+    }
+
+    @media screen and (max-width:450px) {
+        .container{
+            width: 100%;
+
+        }
+        .content{
+            width: 80%;
+           
         }
         
     }
