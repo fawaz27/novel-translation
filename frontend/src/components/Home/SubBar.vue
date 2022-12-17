@@ -43,6 +43,9 @@ export default {
         ButtonModaleComponent,
         UserItemVueComponent
           
+    },
+    mounted(){
+        this.user = localStorage.getItem('user');
     }
 
     

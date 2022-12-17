@@ -1,16 +1,8 @@
 import { createApp } from 'vue'
-import {createRouter,createWebHistory} from 'vue-router'
-
 import App from './App.vue'
-import routes from './routes'
+import router from './routes'
 import store from './store'
-import FontAwesomeIcon from './utils/fontawesone'
-
-
-const router = createRouter({ 
-    history: createWebHistory(),
-    routes,
-})    
+import FontAwesomeIcon from './utils/fontawesone'   
 
 createApp(App)
     .component("FontAwesomeIcon", FontAwesomeIcon)

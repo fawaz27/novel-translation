@@ -9,7 +9,7 @@
                 <a href="#">Profil</a>
                 <a href="#">Settings</a>
                 <a href="#">Notifications</a>
-                <a href="#">Log Out</a>
+                <a v-on:click="logOut">Log Out</a>
             </div>
         </div> 
     </div>
@@ -40,9 +40,15 @@ export default{
         }
     },
     methods:{
-    dropdown () { 
-        document.getElementById("myDropdown").classList.toggle("show");
-    },
+        dropdown () { 
+            document.getElementById("myDropdown").classList.toggle("show");
+        },
+        logOut(){
+            localStorage.clear();
+            console.log('Log Out');
+            this.$router.push({name:'home'});
+        }
+
        
     },
     props:["username","img"]

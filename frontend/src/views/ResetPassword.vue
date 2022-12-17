@@ -1,41 +1,38 @@
 <template>
-    <div class="register">
+    <div class="reset">
 
-	<form action="#" method="post">
-		<h2>Sign Up</h2>
-		<p>
-			<label for="Email" class="floatLabel">Email</label>
-			<input id="Email" name="Email" type="text">
-		</p>
-		<p>
-			<label for="password" class="floatLabel">Password</label>
-			<input id="password" name="password" type="password">
-			
-		</p>
-		<p>
-			<label for="confirm_password" class="floatLabel">Confirm Password</label>
-			<input id="confirm_password" name="confirm_password" type="password">
-		</p>
-		<p>
-			<input type="submit" value="Create My Account" id="submit">
-		</p>
-		<p>
-			<router-link to="/login" ><input type="submit" value="Login" id="submit"></router-link>	
-		</p>
+		<form action="#" method="post">
+			<h2>Reset your Password</h2>
+			<p>
+                <label for="password" class="floatLabel">New Password</label>
+                <input id="password" name="password" type="password">
+            </p>
+            <p>
+                <label for="confirm_password" class="floatLabel">Confirm Password</label>
+                <input id="confirm_password" name="confirm_password" type="password">
+            </p>
+            <p>
+                <input type="submit" value="Reset Password" id="submit">
+            </p>
+            
+           
+            
+            
 		</form>
     </div>
+
   </template>
   
   <script>
   export default {
     // eslint-disable-next-line vue/multi-word-component-names
-    name: 'register',
+    name: 'resetPassword',
     
   }
   </script>
-  <style scoped >
 
-	.register{
+  <style scoped >
+	.reset{
 		top:-10px;
 		width: 100%;
 		position: absolute;
@@ -55,6 +52,7 @@
 		border-radius: 2px;
 		
 	}
+	
 
 	h2 {
 		margin:0 0 50px 0;

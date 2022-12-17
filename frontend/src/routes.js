@@ -5,7 +5,9 @@ import Profile from './views/Profile.vue'
 import Register from './views/Register.vue'
 import Login from './views/Login.vue'
 import Forgot from './views/ForgotPassword.vue'
-export default [
+import ResetPassword from './views/ResetPassword.vue'
+import {createRouter,createWebHistory} from 'vue-router'
+const routes = [
     {
         path:'/',
         name:'home',
@@ -43,5 +45,18 @@ export default [
         path:'/forgot-password',
         name:'forgot',
         component:Forgot
+    },
+    {
+        path:'/reset-password',
+        name:'resetPassword',
+        component:ResetPassword
     }
 ]
+
+
+const router = createRouter({ 
+    history: createWebHistory(),
+    routes,
+}) ;
+
+export default router;

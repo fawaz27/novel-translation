@@ -1,30 +1,56 @@
 <template>
     <div class="login">
-        <form action="#" method="post">
-		<h2>Sign In</h2>
-		<p>
-			<label for="Email" class="floatLabel">Username/Email</label>
-			<input id="Email" name="Email" type="text">
-		</p>
-		<p>
-			<label for="password" class="floatLabel">Password</label>
-			<input id="password" name="password" type="password">		
-		</p>
-		<p>
-			<label for=""> <router-link to="/forgot-password">Lost your password?</router-link> </label>
-		</p>
-		<p>
-			<input type="submit" value="Log In" id="submit">
-		</p>
-
+        <form  @submit.prevent="signIn">
+			<h2>Sign In</h2>
+			<p>
+				<label for="EmailUsername" class="floatLabel">Username/Email</label>
+				<input id="EmailUsername" name="EmailUsername" type="text" v-model="body.login">
+			</p>
+			<p>
+				<label for="password" class="floatLabel">Password</label>
+				<input id="password" name="password" type="password" v-model="body.password">		
+			</p>
+			<p>
+				<label for=""> <router-link to="/forgot-password">Lost your password?</router-link> </label>
+			</p>
+			<div class="submit-button">
+				<button >Log In</button>
+			</div>
+			<div class="sub-form">
+				<label>Not a member?</label>
+				<div class="link" style=""><router-link to="/">Signup now</router-link></div>		
+			</div>
 		</form>
     </div>
   </template>
   
   <script>
+  import api from '../api'
+
   export default {
     // eslint-disable-next-line vue/multi-word-component-names
     name: 'login',
+	data(){
+		return {
+			body : {
+				login :"",
+				password :""
+			}
+		}
+	},
+	methods:{
+		async signIn(){
+			let result = await api.post('auth/login',{json: this.body}).json();
+			console.log(result);
+			
+			if(result && result!=""){
+				this.$router.push({name:'home'});
+				localStorage.setItem('user', JSON.stringify(result) );
+				
+			}
+				
+		}
+	},
     props: {
       msg: String
     }
@@ -53,6 +79,9 @@
 		border-radius: 2px;
 		
 	}
+	h3{
+		text-align: center;
+	}
 
 	h2 {
 		margin:0 0 50px 0;
@@ -64,8 +93,21 @@
 	}
 
 	p {
-		margin: 0 0 3em 0;
+		margin: 0 0 2em 0;
 		position: relative;
+	}
+	.submit-button{
+		margin: 0 0 2em 0;
+		position: relative;
+
+	}
+	button{
+		display: block;
+		box-sizing: border-box;
+		width: 100%;
+		outline: none;
+		margin: 0;
+		height: 40px;
 	}
 	input {
 		display: block;
@@ -73,6 +115,7 @@
 		width: 100%;
 		outline: none;
 		margin:0;
+		padding: 0 5px 0 5px;
 		height: 40px;
 	}
 	label{
@@ -85,7 +128,19 @@
 		
     
 	}
-	
+	.sub-form{
+		display:flex; 
+		justify-content: center;
+	}
+
+	.sub-form label{
+		color: black;
+	}
+	.link{
+		font-size:15px; 
+		font-weight:700;
+		margin-left: 5px ;
+	}
 
   @media screen and (max-width:430px) {
 	form{
