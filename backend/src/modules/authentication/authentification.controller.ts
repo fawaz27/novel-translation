@@ -59,8 +59,8 @@ export class AuthentificationController{
         
         try {
             const {cookie,user} = await this.authService.logIn(login);
-            response.setHeader('Set-Cookie', [cookie]);//?
-            response.status(200).send(user);
+            response.setHeader('set-cookie', [cookie]);//?
+            response.status(200).send({cookie});
 
 
         } catch (error) {

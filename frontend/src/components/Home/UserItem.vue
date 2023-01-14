@@ -59,6 +59,9 @@ export default{
 
 <style>
 
+    a{
+        cursor: pointer;
+    }
     .user-name{
         
         margin: 5px 10px 0 0;

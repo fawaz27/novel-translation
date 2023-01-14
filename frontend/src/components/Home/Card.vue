@@ -1,7 +1,7 @@
 <template>
     <div class="card">     
         <div class="card-body">
-            <router-link :to="link" v-on:click="essai" >
+            <router-link :to="link"  >
                 <img class="image" :src="link" :alt="novelname"  width="160" height="200">
             </router-link>
         </div>

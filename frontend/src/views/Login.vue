@@ -1,6 +1,6 @@
 <template>
     <div class="login">
-        <form  @submit.prevent="signIn">
+        <div class="form">
 			<h2>Sign In</h2>
 			<p>
 				<label for="EmailUsername" class="floatLabel">Username/Email</label>
@@ -14,18 +14,25 @@
 				<label for=""> <router-link to="/forgot-password">Lost your password?</router-link> </label>
 			</p>
 			<div class="submit-button">
-				<button >Log In</button>
+				<button v-bind:disabled="!validateFields" @click="signIn">
+					<span v-if="status=='loading'">Log In ... </span>
+					<span v-else>Log In</span>		
+				</button>
 			</div>
 			<div class="sub-form">
-				<label>Not a member?</label>
-				<div class="link" style=""><router-link to="/">Signup now</router-link></div>		
+				<label>You do not have an account?</label>
+				<div class="link" style=""><router-link to="/register">SignUp</router-link></div>		
 			</div>
-		</form>
+			<div class="sub-form" v-if="status=='error'">
+				<label> Wrong Credentials</label>
+			</div>
+		</div>
     </div>
   </template>
   
   <script>
-  import api from '../api'
+import { mapState } from 'vuex';
+
 
   export default {
     // eslint-disable-next-line vue/multi-word-component-names
@@ -39,20 +46,39 @@
 		}
 	},
 	methods:{
-		async signIn(){
-			let result = await api.post('auth/login',{json: this.body}).json();
-			console.log(result);
-			
-			if(result && result!=""){
-				this.$router.push({name:'home'});
-				localStorage.setItem('user', JSON.stringify(result) );
-				
-			}
-				
+		signIn(){
+			// const self = this;	
+			this.$store.dispatch('signIn',this.body)
+				.then( function(response){
+					response;
+					// self.$router.push('/');
+				},function (error){
+					console.log(error);
+				});
+
 		}
 	},
+	mounted:function(){
+		
+		if (this.$store.state.user.id != -1) {
+			this.$router.push('/');
+		}
+	},
+	computed:{
+		validateFields : function(){
+			
+			if (this.body.login!="" && this.body.password!=""){
+				return true;
+			} 
+			else{
+				return false;
+			}
+			
+		},
+		...mapState(['status'])
+	},
     props: {
-      msg: String
+      
     }
   }
   </script>
@@ -70,7 +96,7 @@
 		font-size: 10px;
 		padding: 4em 4em 2em;
 	}
-	form{
+	.form{
 		background: #fff;
 		padding: 40px;
 		max-width: 400px;
@@ -135,6 +161,7 @@
 
 	.sub-form label{
 		color: black;
+		font-size:15px; 
 	}
 	.link{
 		font-size:15px; 
