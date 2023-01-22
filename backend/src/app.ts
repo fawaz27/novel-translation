@@ -51,7 +51,15 @@ class App {
         //   swaggerUi.serve, 
         //   swaggerUi.setup(swaggerDocument,{ explorer: true })
         // );
-        this.app.use(cors())
+        this.app.use(cors({
+          origin: 'http://localhost:8080',
+          credentials:true
+        }))
+
+        this.app.use(function(req, res, next) {
+          res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+          next();
+        });
 
         
     }

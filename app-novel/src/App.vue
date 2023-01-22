@@ -1,6 +1,6 @@
 <template>
-   <v-app>
-    
+   <v-app :theme="theme">
+
     <v-navigation-drawer v-model="drawer"  fixed temporary app>
 
       <v-sheet
@@ -78,7 +78,7 @@
           ></v-text-field>
       </transition>
 
-		<avatar-menu :user="user" ></avatar-menu>
+		<avatar-menu :user="user" :theme="theme" ></avatar-menu>
     </v-app-bar>
     
     <v-main>
@@ -91,6 +91,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import AvatarMenu from './components/AvatarMenu.vue';
 export default {
   name: 'App',
@@ -108,17 +109,10 @@ export default {
       { text: 'About', path :'/about', icon :'mdi-information-outline' },
       { text: 'Contact', path:'/contact', icon :'mdi-account-box' },
     ],
-    user:{
-      id : -1,
-      username:"Jean27",
-      firstName:"Jean",
-      lastName:"Doe",
-      email:"jean.doe@doe.com"
-    },
     scrolled: false
   }),
   mounted() {
-   
+
   },
   methods: {
     clear() {
@@ -128,6 +122,9 @@ export default {
       return this.$router.push('/');
     }
     
+  },
+  computed:{
+    ...mapState(['user','theme'])
   }
 }
 

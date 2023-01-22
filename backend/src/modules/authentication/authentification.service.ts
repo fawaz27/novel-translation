@@ -9,6 +9,7 @@ import { User } from '../user/user.entity';
 import logInDto from './login.dto';
 import CreateUserDto from '../user/user.dto';
 import ConflictException from '../../exceptions/ConflictException';
+import { CookieOptions } from 'express';
 
 
 export class AuthentificationService{
@@ -78,10 +79,10 @@ export class AuthentificationService{
             
             if (isPassword) {
                 user.password = "";
-                const tokenData = this.createToken(user);
-                const cookie = this.createCookie(tokenData);
+                const token = this.createToken(user);
+                const optionsCookie = this.optionsCookie();
                 
-                return {cookie,user};
+                return {token,optionsCookie,user};
 
             } 
             else {
@@ -98,7 +99,7 @@ export class AuthentificationService{
     }
 
     public async logOut(){
-        return 'Authorization=;Max-age=0';
+        return '';
     }
 
     public createToken(user: User)
@@ -108,16 +109,37 @@ export class AuthentificationService{
         const dataStoredInToken:DataStoredInToken= {
             _id: String(user.id) ,
         };
-        return {
-            expiresIn,
-            token: jwt.sign(dataStoredInToken,secret as string,{ expiresIn:`${expiresIn}s` }),
-        };
+        return  jwt.sign(dataStoredInToken,secret as string,{ expiresIn:`${expiresIn}s` });
     }
 
-    public createCookie(tokenData: TokenData )
+    public optionsCookie()
     {
-        return `Authorization = ${tokenData.token}; HttpOnly; Max-Age = ${tokenData.expiresIn}`;
+        const options :CookieOptions = {
+            maxAge: 3600,
+            secure: true,
+            httpOnly: true,
+            sameSite: 'lax'
+        }
+        return options;
     }
+
+    // public createToken(user: User)
+    // {
+    //     const expiresIn = 3600;
+    //     const secret =  process.env.JWT_KEY;
+    //     const dataStoredInToken:DataStoredInToken= {
+    //         _id: String(user.id) ,
+    //     };
+    //     return {
+    //         expiresIn,
+    //         token: jwt.sign(dataStoredInToken,secret as string,{ expiresIn:`${expiresIn}s` }),
+    //     };
+    // }
+
+    // public createCookie(tokenData: TokenData )
+    // {
+    //     return `Authorization = ${tokenData.token}; HttpOnly; Max-Age = ${tokenData.expiresIn}`;
+    // }
 
 }
 

@@ -76,6 +76,16 @@
                     Register
                 </v-btn>
               </div>
+
+              <v-divider class="my-3"></v-divider>
+              <v-btn
+                    rounded
+                    variant="text"
+                    :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
+                    @click="switchTheme"
+              >
+                   {{ theme }}
+              </v-btn>
               
             </div>
           </v-card-text>
@@ -97,7 +107,10 @@
             return 'JD';
         },
         LogOut(){
-            console.log('You are disconnected');
+            this.$store.commit('logOut');
+        },
+        switchTheme(){
+            this.$store.commit('switchTheme');
         }
     },
     props:{
@@ -105,7 +118,12 @@
             type: Object,
             required: false
         },
-    }
+        theme:{
+            type:String,
+            required:true
+        }
+    },
+    
   }
   </script>
 
