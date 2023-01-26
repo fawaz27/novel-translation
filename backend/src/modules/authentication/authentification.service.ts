@@ -10,11 +10,12 @@ import logInDto from './login.dto';
 import CreateUserDto from '../user/user.dto';
 import ConflictException from '../../exceptions/ConflictException';
 import { CookieOptions } from 'express';
+import { Repository } from 'typeorm';
 
 
 export class AuthentificationService{
 
-    public userRepository = AppDataSource.getRepository(User);
+    public userRepository :Repository<User>;
     
     constructor(){
         

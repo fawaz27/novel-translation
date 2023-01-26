@@ -25,7 +25,10 @@ export default createStore({
         status : '',
         user : userStorage,
         cookies:[],
-        theme:'light'
+        theme:'light',
+        novels:[],
+        page:1,
+        currentNovel:{}
     },
     getters: {
         getCookie (state) {
@@ -36,6 +39,15 @@ export default createStore({
         }
     },
     mutations:{
+        setPage : function (state,page){
+            state.page = page;
+        },
+        setcurrentNovel : function (state,currentnovel){
+            state.currentNovel = currentnovel;
+        },
+        setNovels : function (state,novels){
+            state.novels = novels;
+        },
         setStatus : function (state,status){
             state.status = status;
         },
@@ -72,6 +84,9 @@ export default createStore({
 				state.theme = 'light';
 			}
 			
+        },
+        updateNovels:function(state,novels){
+            state.novels = novels;
         }
     },
     actions:{
@@ -125,6 +140,40 @@ export default createStore({
                 }  
             }
               
+        },
+        getNovelsLatest : async ({commit,state})=>{
+           
+            try {
+                const response = await api.get(`novelfull/latest-novel?page=${state.page}`);
+                if (response.status == 200) {
+                    commit('setStatus','Success Get Novels Latest');
+                    commit('updateNovels',response.data);
+
+                }
+                else {
+                    commit('setStatus','Failure');
+                }
+              
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        updateCurrentPage : async ({commit,state})=>{
+           
+            try {
+                const response = await api.get(`novelfull/latest-novel?page=${state.page}`);
+                if (response.status == 200) {
+                    commit('setStatus','Success Get Novels Latest');
+                    commit('updateNovels',response.data);
+
+                }
+                else {
+                    commit('setStatus','Failure');
+                }
+              
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
 })

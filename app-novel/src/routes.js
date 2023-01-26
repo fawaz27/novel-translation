@@ -39,10 +39,10 @@ const routes = [
         exact: true
     },
     {
-        path:'/novels/:id',
+        path:'/novels/:name',
         name:'novel',
         component:Novel,
-        exact: true
+        
     }
 ]
 

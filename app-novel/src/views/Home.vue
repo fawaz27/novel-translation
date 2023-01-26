@@ -1,8 +1,10 @@
 <template>
-    
-        
-      <header-main></header-main>
-      <novels-cards></novels-cards>
+    <v-container>
+       <div>
+        <header-main></header-main>
+        <novels-cards></novels-cards>
+       </div> 
+    </v-container>  
  </template>
  
  <script>
