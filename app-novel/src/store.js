@@ -28,22 +28,63 @@ export default createStore({
         theme:'light',
         novels:[],
         page:1,
-        currentNovel:{}
+        currentNovel:{
+            'description':''
+        },
+        chaptersCurrentNovel:[],
+        chapters_one:[],
+        chapters_two:[],
+        contentChapterCurrent:{}
     },
     getters: {
         getCookie (state) {
-          return state.cookies;
+            return state.cookies;
         },
         getUser (state) {
             return state.user;
+        },
+        getNovels(state){
+            return state.novels;
+        },
+        getCurrentNovel(state){
+            return state.currentNovel;
+        },
+        getChaptersCurrentNovel(state){
+            return state.chaptersCurrentNovel;
         }
     },
     mutations:{
         setPage : function (state,page){
             state.page = page;
         },
+        setchapterscurrentNovel : function (state,chaptersCurrentNovel){
+            state.chaptersCurrentNovel = chaptersCurrentNovel;
+            state.chaptersCurrentNovel.forEach((it)=>{
+                let parts = it.link.split('/');
+                let result = parts[parts.length - 1];
+                it.name = result.replace(/.html/g,'');
+             });
+            state.chapters_one = state.chaptersCurrentNovel.slice(0, 25);
+            state.chapters_two = state.chaptersCurrentNovel.slice(25);
+        },
         setcurrentNovel : function (state,currentnovel){
             state.currentNovel = currentnovel;
+        },
+        setcontentChapter : function (state,contentChapter){
+            state.contentChapterCurrent = contentChapter;
+            if(state.contentChapterCurrent.next_chap){
+                let parts = state.contentChapterCurrent.next_chap.split('/');
+                let result = parts[parts.length - 1];
+                state.contentChapterCurrent.name_next_chap = result.replace(/.html/g,'');
+            }
+            if(state.contentChapterCurrent.prev_chap){
+                let parts = state.contentChapterCurrent.prev_chap.split('/');
+                let result = parts[parts.length - 1];
+                state.contentChapterCurrent.name_prev_chap = result.replace(/.html/g,'');
+            }
+            
+            console.log(state.contentChapterCurrent.name_next_chap);
+            
         },
         setNovels : function (state,novels){
             state.novels = novels;
@@ -87,6 +128,9 @@ export default createStore({
         },
         updateNovels:function(state,novels){
             state.novels = novels;
+            state.novels.forEach((it)=>{
+               it.name = it.link.slice(1, -5).replace(/.html/g,'');
+            });
         }
     },
     actions:{
@@ -158,6 +202,54 @@ export default createStore({
                 console.error(error);
             }
         },
+        getNovel : async ({commit},name)=>{
+           
+            try {
+                const response = await api.get(`novelfull/novel?link=${name}.html`);
+                if (response.status == 200) {
+                    commit('setStatus','Success Get Novel');
+                    commit('setcurrentNovel',response.data);
+                }
+                else {
+                    commit('setStatus','Failure');
+                }
+              
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        getListChapterNovel : async ({commit},params)=>{
+           
+            try {
+                const response = await api.get(`novelfull/novel-list-chapter?link=${params.name}.html&page=${params.page}`);
+                if (response.status == 200) {
+                    commit('setStatus','Success Get List Chapter Novel');
+                    commit('setchapterscurrentNovel',response.data);
+                }
+                else {
+                    commit('setStatus','Failure');
+                }
+              
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        getChapterContent : async ({commit},params)=>{
+           
+            try {
+                const response = await api.get(`novelfull/novel-chapter-content?link=/${params.name}/${params.chapter}.html`);
+                if (response.status == 200) {
+                    commit('setStatus','Success Get Chapter Content');
+                    commit('setcontentChapter',response.data);
+                }
+                else {
+                    commit('setStatus','Failure');
+                }
+              
+            } catch (error) {
+                console.error(error);
+            }
+        },
         updateCurrentPage : async ({commit,state})=>{
            
             try {
@@ -166,6 +258,21 @@ export default createStore({
                     commit('setStatus','Success Get Novels Latest');
                     commit('updateNovels',response.data);
 
+                }
+                else {
+                    commit('setStatus','Failure');
+                }
+              
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        nextChapter : async ({commit,state})=>{
+            try {
+                const response = await api.get(`novelfull/novel-chapter-content?link=${state.contentChapterCurrent.next_chap}`);
+                if (response.status == 200) {
+                    commit('setStatus','Success Get Next Chapter Content');
+                    commit('setcontentChapter',response.data);
                 }
                 else {
                     commit('setStatus','Failure');

@@ -88,12 +88,13 @@ export class NovelFullService{
     }
 
     public async getNovel(link:string){
-
+        
         let headers = this.headers;
-        const { data, status } = await axios.get(`${this.baseUrl}${link}`, { headers  });
+        const { data, status } = await axios.get(`${this.baseUrl}/${link}`, { headers  });
         if (status !== 200) {
             throw new Error(`Error while fetching the page : ${status}`);
         }
+        
         
         const $ = load(data);
         const infos = $('.col-info-desc');    
@@ -120,7 +121,7 @@ export class NovelFullService{
    
     public async getListChapterNovel(link:string,page:number){
         let headers = this.headers;
-        const { data, status } = await axios.get(`${this.baseUrl}${link}?page=${page}`, { headers  });
+        const { data, status } = await axios.get(`${this.baseUrl}/${link}?page=${page}`, { headers  });
         if (status !== 200) {
             throw new Error(`Error while fetching the page : ${status}`);
         }

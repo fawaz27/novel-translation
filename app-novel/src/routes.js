@@ -4,6 +4,7 @@ import Contact from './views/Contact.vue'
 import Login from './views/Login.vue'
 import Register from './views/Register.vue'
 import Novel from './views/Novel.vue'
+import Chapter from './views/Chapter.vue'
 import {createRouter,createWebHistory} from 'vue-router'
 const routes = [
     {
@@ -43,6 +44,12 @@ const routes = [
         name:'novel',
         component:Novel,
         
+    },
+    {
+        path:'/novels/:name/:chapter',
+        name:'chapter',
+        component:Chapter,
+        exact: true
     }
 ]
 

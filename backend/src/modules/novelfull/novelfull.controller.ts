@@ -44,8 +44,9 @@ export class NovelFullController{
 
     public  getNovel= async(request: express.Request, response: express.Response, next: express.NextFunction)=>{
 
-        const link:string = request.body.link;
-        //console.log(UserData);
+        const link:string = String(request.query.link) ;
+        console.log(link);
+        
         try {
             const novel = await this.novelFullService.getNovel(link);
             response.status(200).send(novel);
@@ -58,8 +59,8 @@ export class NovelFullController{
 
     public  getListChapterNovel= async(request: express.Request, response: express.Response, next: express.NextFunction)=>{
 
-        const link:string = request.body.link;
-        const page:number = request.body.page;
+        const link:string = String(request.query.link);
+        const page:number = Number(request.query.page);
         //console.log(UserData);
         try {
             const list = await this.novelFullService.getListChapterNovel(link,page);
@@ -73,7 +74,7 @@ export class NovelFullController{
 
     public  getChapterContent = async(request: express.Request, response: express.Response, next: express.NextFunction)=>{
 
-        const link:string = request.body.link;
+        const link:string = String(request.query.link) ;
         //console.log(UserData);
         try {
             const chapter = await this.novelFullService.getChapterContent(link);
