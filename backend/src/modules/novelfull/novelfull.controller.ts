@@ -42,6 +42,8 @@ export class NovelFullController{
         }
     }
 
+    
+
     public  getNovel= async(request: express.Request, response: express.Response, next: express.NextFunction)=>{
 
         const link:string = String(request.query.link) ;

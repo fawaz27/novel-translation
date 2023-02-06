@@ -136,8 +136,9 @@ export class NovelFullService{
             const title = $(row).text();
             result.push({ link, title });
         });
-
-        return result;
+        // const low =
+        const last_page = $('li.last a').attr('data-page');        
+        return {chapters:result,last_page:Number(last_page)+1};
     }
 
     public async getChapterContent(link:string){

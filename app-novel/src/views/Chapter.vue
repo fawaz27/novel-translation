@@ -1,5 +1,8 @@
 <template>
     <div class="chapter container">
+        <!-- <v-btn color="primary" @click="downloadChapter">
+            Télécharger
+        </v-btn> -->
         <div class="chapter-title text-center">
                 <div class="text-h5 item" @click="$router.push({ name: 'novel', params:{name: this.$route.params.name } })">{{ contentChapterCurrent.title_novel }}</div>
                 <div class="text-h7 item my-2">{{ contentChapterCurrent.title_chapter }}</div>
@@ -118,6 +121,19 @@ export default {
     },
 
     data: () => ({
+        chapter_test: {
+        title_novel: "MMORPG: Rebirth as an Alchemist",
+        title_chapter: "1 Ren",
+        content: [
+          "",
+          "",
+          "",
+          "“Re . . . n . . .”",
+          "“Ren!”",
+          "Ren blinked, and his eyes zeroed on his father.",
+          "“Did you hear what I said?”",
+          "Ren was definitely dreaming. One moment, men were chasing him, and the next thing he knew, he was jumping off a building.",
+        ]}
     }),
 
     computed:{
@@ -179,6 +195,33 @@ export default {
             });
             // this.setcontentChapter({});
             this.getNextPrevChapterContent(this.contentChapterCurrent.name_prev_chap);
+        },
+        downloadChapter() {
+            // Construire le contenu du fichier HTML
+            const html = `
+                <html>
+                <head>
+                    <title>${this.contentChapterCurrent.title_novel} - ${this.contentChapterCurrent.title_chapter}</title>
+                </head>
+                <body>
+                    <div style="margin-right: auto;margin-left: auto;padding-left: 20px;padding-right: 20px;">
+                        <h1>${this.contentChapterCurrent.title_novel}</h1>
+                        <h2>${this.contentChapterCurrent.title_chapter}</h2>
+                        <p>
+                        ${this.contentChapterCurrent.content.join("<br><br>")}
+                        </p>
+                    <div/>
+                </body>
+                </html>
+            `;
+            // Créer un lien pour télécharger le fichier HTML
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(
+                new Blob([html], { type: "text/html" })
+            );
+            link.setAttribute("download", `${this.contentChapterCurrent.title_chapter}.html`);
+            document.body.appendChild(link);
+            link.click();
         }
     }
 

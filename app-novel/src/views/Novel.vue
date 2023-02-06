@@ -149,11 +149,11 @@
                     <v-window-item :value="1">
                         <v-container fluid>
                                 <div class="text-h5 my-5">Synopsis</div>
-                                <p v-if="lengthDescription > 150"> {{ truncatedDescription }} 
+                                <!-- <p v-if="lengthDescription > 150"> {{ truncatedDescription }} 
                                     <v-btn @click="showMore = true">Show More</v-btn>
                                 </p>
-                                <p v-else>{{ currentNovel.description }}</p>
-                                <!-- <p>{{ currentNovel.description }}</p> -->
+                                <p v-else>{{ currentNovel.description }}</p> -->
+                                <p>{{ currentNovel.description }}</p>
                             
                         </v-container>
                     </v-window-item>
@@ -184,11 +184,25 @@
                                         >
                                         
                                             <td>
-                                                <span class="item ml-2" 
-                                                @click="$router.push({ name: 'chapter', params:{name: this.$route.params.name, chapter: chapter.name} })" 
-                                                >
-                                                {{ chapter.title }}
-                                                </span>
+                                                <div class="d-flex justify-space-between">
+                                                    <span class="item ml-2" 
+                                                    @click="$router.push({ name: 'chapter', params:{name: this.$route.params.name, chapter: chapter.name} })" 
+                                                    >
+                                                    {{ chapter.title }}
+                                                    </span>
+                                                    <!-- <v-progress-circular
+                                                        :rotate="360"
+                                                        :size="30"
+                                                        :width="6"
+                                                        :model-value="value"
+                                                        color="blue-grey-lighten-1"
+                                                        
+                                                    >
+                                                        <v-icon :size="10">mdi-download</v-icon>
+                                                    </v-progress-circular> -->
+                                                    <v-icon :size="20" class="download" @click="downloadChapter(chapter.link)">mdi-download</v-icon>
+                                                </div>
+                                                
                                             </td>
                                         </tr>
                                         </tbody>
@@ -206,11 +220,25 @@
                                         <tr
                                             v-for="(chapter, index) in chapters_two" :key="index"
                                         >
-                                            <td><span class="item ml-2" 
-                                                @click="$router.push({ name: 'chapter', params:{name: this.$route.params.name, chapter: chapter.name} })" 
-                                                >
-                                                {{ chapter.title }}
-                                                </span>
+                                            <td>
+                                                <div class="d-flex justify-space-between">
+                                                    <span class="item ml-2" 
+                                                    @click="$router.push({ name: 'chapter', params:{name: this.$route.params.name, chapter: chapter.name} })" 
+                                                    >
+                                                    {{ chapter.title }}
+                                                    </span>
+                                                    <!-- <v-progress-circular
+                                                        :rotate="360"
+                                                        :size="30"
+                                                        :width="6"
+                                                        :model-value="value"
+                                                        color="blue-grey-lighten-1"
+                                                        
+                                                    >
+                                                        <v-icon :size="10">mdi-download</v-icon>
+                                                    </v-progress-circular> -->
+                                                    <v-icon :size="20" class="download" @click="downloadChapter(chapter.link)">mdi-download</v-icon>
+                                                </div>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -228,7 +256,7 @@
                                             <v-pagination
                                             v-model="page"
                                             class="my-4"
-                                            :length="30"
+                                            :length="last_page"
                                             @update:model-value="updateData"
                                             ></v-pagination>
                                         </v-container>
@@ -254,7 +282,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex'
-
+import api from "../api";
 export default {
     name: 'novel-view',
     props:{
@@ -265,8 +293,17 @@ export default {
     components: {
 
     },
+    mounted () {
+        this.interval = setInterval(() => {
+        if (this.value === 100) {
+            return (this.value = 0)
+        }
+        this.value += 10
+        }, 1000)
+    },
 
     data: () => ({
+        value:0,
         showMore: false,
         currentPage: 1,
         perPage: 8,
@@ -303,7 +340,7 @@ export default {
 			}
     },
     computed:{
-        ...mapState(['currentNovel','chaptersCurrentNovel','chapters_one','chapters_two']),
+        ...mapState(['currentNovel','chaptersCurrentNovel','chapters_one','chapters_two','last_page']),
         truncatedDescription() {
             return this.currentNovel.description.substring(0, 150);
         },
@@ -313,6 +350,43 @@ export default {
     },
     methods:{
         ...mapMutations(['setPage','setNovels','setchapterscurrentNovel']),
+
+      async downloadChapter(link){
+            try {
+                const response = await api.get(`novelfull/novel-chapter-content?link=${link}`);
+                if (response.status == 200) {
+                
+                const chapter  = response.data;
+                const html = `
+                <html>
+                <head>
+                    <title>${chapter.title_novel} - ${chapter.title_chapter}</title>
+                </head>
+                <body>
+                    <h1>${chapter.title_novel}</h1>
+                    <h2>${chapter.title_chapter}</h2>
+                    <p>
+                    ${chapter.content.join("<br><br>")}
+                    </p>
+                </body>
+                </html>
+                `;
+                // Créer un lien pour télécharger le fichier HTML
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(
+                    new Blob([html], { type: "text/html" })
+                );
+                link.setAttribute("download", `${chapter.title_chapter}.html`);
+                document.body.appendChild(link);
+                link.click();
+                }   
+                else {
+                    console.log('ERROR');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+      } ,
       async updateData(page) {
           this.setPage(page);
           this.setchapterscurrentNovel([]);
@@ -367,7 +441,9 @@ export default {
     .row{
        
     }
-    
+    .download:hover{
+        cursor: pointer;
+    }
     .item:hover{
         text-decoration: underline;
         cursor: pointer;

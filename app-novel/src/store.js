@@ -34,6 +34,7 @@ export default createStore({
         chaptersCurrentNovel:[],
         chapters_one:[],
         chapters_two:[],
+        last_page:0,
         contentChapterCurrent:{}
     },
     getters: {
@@ -69,6 +70,9 @@ export default createStore({
         },
         setcurrentNovel : function (state,currentnovel){
             state.currentNovel = currentnovel;
+        },
+        setLastPagecurrentNovel : function (state,last_page){
+            state.last_page = last_page;
         },
         setcontentChapter : function (state,contentChapter){
             state.contentChapterCurrent = contentChapter;
@@ -224,7 +228,9 @@ export default createStore({
                 const response = await api.get(`novelfull/novel-list-chapter?link=${params.name}.html&page=${params.page}`);
                 if (response.status == 200) {
                     commit('setStatus','Success Get List Chapter Novel');
-                    commit('setchapterscurrentNovel',response.data);
+                    console.log(response.data.chapters);
+                    commit('setchapterscurrentNovel',response.data.chapters);
+                    commit('setLastPagecurrentNovel',response.data.last_page);
                 }
                 else {
                     commit('setStatus','Failure');
@@ -241,11 +247,10 @@ export default createStore({
                 if (response.status == 200) {
                     commit('setStatus','Success Get Chapter Content');
                     commit('setcontentChapter',response.data);
-                }
+                }   
                 else {
                     commit('setStatus','Failure');
                 }
-              
             } catch (error) {
                 console.error(error);
             }
