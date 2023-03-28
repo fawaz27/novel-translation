@@ -7,15 +7,12 @@ import { SourceController } from './modules/source/source.controller';
 import { AppDataSource } from './database/AppDataSource';
 import { ResetPasswordController } from './modules/password/resetPassword.controller';
 import { NovelController } from './modules/novel/novel.controller';
-import { NovelFullController } from './modules/novelfull/novelfull.controller';
 
 (async () => {
 
 
     try {
       await AppDataSource.initialize();
-      
-      
     } catch (error) {
       console.log('Error while connecting to the database', error);
       return error;
@@ -26,8 +23,7 @@ import { NovelFullController } from './modules/novelfull/novelfull.controller';
       new EmailConfirmationController(),
       new ResetPasswordController(),
       new SourceController(),
-      new NovelController(),
-      new NovelFullController()
+      new NovelController()
     ]);
     
     

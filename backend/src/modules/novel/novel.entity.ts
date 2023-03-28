@@ -14,32 +14,8 @@ export class Novel{
     @Column({ type: 'varchar', length: 200 })
     public name : string;
 
-    @Column({ type: 'varchar', length: 300 })
-    public nameAlt : string;
-
     @Column({ type: 'varchar', length: 200 })
-    public link : string;
-
-    @Column({ type: 'varchar', length: 50 })
-    public status : string;
-
-    @Column({ type: 'varchar', length: 10})
-    public lang : string;
-
-    @Column({ type: 'varchar', length: 500 })
-    public genres : string;
-
-    @Column({ type: 'varchar', length: 200 })
-    public infos : string;
-
-    @Column({ type: 'varchar', length: 200 })
-    public lastChapter : string;
-
-    @Column({ type: 'varchar', length: 500 })
-    public description : string;
-
-    @Column({ type: 'varchar', length: 500 })
-    public img : string;
+    public url : string;
 
     @OneToMany(()=> Chapter, (chap)=>chap.novel)
     public chapters : Chapter[]

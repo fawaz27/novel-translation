@@ -19,9 +19,9 @@
                 >
                 <div class="d-flex justify-center">
                   <v-card height="250" width="170" class="card" 
-                  :to="{name:'novel',params:{name:novel.name}}">
+                  :to="{name:'novel',params:{name:novel.title}}">
                       <v-img
-                        :src="novel.image"
+                        :src="novel.coverImageUrl"
                         class="bg-white image"
                         height="250"
                         lazy-src="https://picsum.photos/id/11/100/60"
@@ -41,7 +41,7 @@
                 </div>
                 <div class="d-flex justify-center"  >
                     <div class="text-truncate font-weight-bold title" 
-                      @click="$router.push({ name: 'novel', params:{name: novel.name } })" 
+                      @click="$router.push({ name: 'novel', params:{name: novel.title } })" 
                       >
                       {{ novel.title }}
                     </div>

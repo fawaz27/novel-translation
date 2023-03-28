@@ -4,6 +4,7 @@ import CreateSourceDto from "./source.dto";
 import InternalErrorException from "../../exceptions/InternalErrorException";
 import NotFoundException from "../../exceptions/NotFoundException";
 import { Source } from "./source.entity";
+import ConflictException from "../../exceptions/ConflictException";
 
 
 export class SourceService{
@@ -15,6 +16,10 @@ export class SourceService{
     }
 
     public async addSource(source:CreateSourceDto){
+        
+        const alreadyExist = await this.sourceRepository.findOne({where:{name:source.name}});
+        if(alreadyExist)
+            throw new ConflictException(`Source with name ${source.name} already exists.`);
 
         const newSource =  this.sourceRepository.create(source);
         const result = await this.sourceRepository.save(newSource);
@@ -38,6 +43,16 @@ export class SourceService{
     public async getSourceById(id:number){
 
         const source  = await this.sourceRepository.findOne({where:{id:id}});
+        
+        if(source)
+            return source;
+        else
+            throw new NotFoundException('Source not found.');
+    }
+
+    public async getSourceByName(name:string){
+
+        const source  = await this.sourceRepository.findOne({where:{name:name}});
         
         if(source)
             return source;

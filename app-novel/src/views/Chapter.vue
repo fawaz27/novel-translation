@@ -1,11 +1,12 @@
 <template>
-    <div class="chapter container">
-        <!-- <v-btn color="primary" @click="downloadChapter">
-            Télécharger
-        </v-btn> -->
-        <div class="chapter-title text-center">
-                <div class="text-h5 item" @click="$router.push({ name: 'novel', params:{name: this.$route.params.name } })">{{ contentChapterCurrent.title_novel }}</div>
-                <div class="text-h7 item my-2">{{ contentChapterCurrent.title_chapter }}</div>
+    <div>
+        
+        <div class="container">
+        
+        <div class="chapter-title text-center"> 
+            
+                <div class="text-h5 item" @click="$router.push({ name: 'novel', params:{name: this.$route.params.name } })">{{ contentChapterCurrent.titleNovel }}</div>
+                <div class="text-h7 item my-2">{{ contentChapterCurrent.titleNovel }}</div>
         </div>
         <div class="chapter-buttons d-flex justify-center  my-4" style="gap: 1rem">
 
@@ -48,11 +49,13 @@
             
 
         </div>
-        <div class="chapter-content">
-            <p class="my-4" v-for = "(paragraph,index) in contentChapterCurrent.content" :key="index"> {{ paragraph }}</p>
+        <div class="chapter-content" style="font-size: 20px;">
+            <p class="my-4 font-weight-black" >{{ contentChapterCurrent.title }}</p>
+            <p class="my-4 "  v-for = "(paragraph,index) in contentChapterCurrent.content" :key="index"> {{ paragraph }}</p>
         </div>
 
         <v-divider thickness="2"></v-divider>
+        
         <div class="chapter-buttons d-flex justify-center  my-6" style="gap: 1rem">
 
             <v-btn
@@ -95,9 +98,20 @@
 
         </div>
 
+        </div>
+    
+        <v-btn 
+                v-show="showBackToTopBtn"
+                color="light-blue-accent-4"
+                icon="mdi-chevron-up"
+                @click="scrollToTop"
+                class="btn-top"
+
+                >
+                
+        </v-btn>
     </div>
     
- 
 
 </template>
 
@@ -133,14 +147,19 @@ export default {
           "Ren blinked, and his eyes zeroed on his father.",
           "“Did you hear what I said?”",
           "Ren was definitely dreaming. One moment, men were chasing him, and the next thing he knew, he was jumping off a building.",
-        ]}
+        ]},
+        showBackToTopBtn: false
     }),
 
     computed:{
-        ...mapState(['contentChapterCurrent'])
+        ...mapState(['contentChapterCurrent','currentNovel'])
     },
     mounted (){
-        this.getChapterContent()
+        this.getChapterContent();
+        window.addEventListener("scroll", this.handleScroll);
+    },
+    beforeUnmount() {
+        window.removeEventListener("scroll", this.handleScroll);
     },
     methods:{
         ...mapMutations(['setcontentChapter']),
@@ -222,6 +241,15 @@ export default {
             link.setAttribute("download", `${this.contentChapterCurrent.title_chapter}.html`);
             document.body.appendChild(link);
             link.click();
+        },
+        scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        },
+        handleScroll() {
+        this.showBackToTopBtn = window.pageYOffset > 100;
         }
     }
 
@@ -230,19 +258,28 @@ export default {
 
 <style scoped>
 
-    .chapter{
-        margin-top: 26px;
-    }
+    
     .container{
-        margin-right: auto;
-        margin-left: auto;
+       
         padding-left: 20px;
         padding-right: 20px;
+        max-width: 1200px;
+        margin: 30px auto;
     }
     .item:hover{
         text-decoration: underline;
         cursor: pointer;
     }
+
+    .btn-top{
+        display: block;
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 999;
+        opacity: .6;
+    }
+    
 
     @media (max-width: 500px) {
         .text-btn{

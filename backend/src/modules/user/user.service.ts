@@ -4,6 +4,7 @@ import { AppDataSource } from '../../database/AppDataSource';
 import { User } from './user.entity';
 import bcrypt from 'bcrypt';
 import NotFoundException from '../../exceptions/NotFoundException';
+import CreateUserDto from './user.dto';
 
 export class UserService{
    
@@ -56,6 +57,26 @@ export class UserService{
         const result = await this.userRepository.update({ email }, {
             password: hashedPassword
         }); 
+        
+        return result;
+
+    }
+
+    public async updateUser(id: number, user : CreateUserDto ) {
+
+        await this.getUserById(id);
+        const userUpdate = this.userRepository.create(user);
+        const result = await this.userRepository.update({ id }, userUpdate); 
+        
+        return result;
+
+    }
+
+    public async deleteUser(id: number) {
+
+        await this.getUserById(id);
+
+        const result = await this.userRepository.delete(id);
         
         return result;
 

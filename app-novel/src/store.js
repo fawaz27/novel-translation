@@ -61,15 +61,16 @@ export default createStore({
         setchapterscurrentNovel : function (state,chaptersCurrentNovel){
             state.chaptersCurrentNovel = chaptersCurrentNovel;
             state.chaptersCurrentNovel.forEach((it)=>{
-                let parts = it.link.split('/');
+                let parts = it.url.split('/');
                 let result = parts[parts.length - 1];
-                it.name = result.replace(/.html/g,'');
+                it.title = result.replace(/.html/g,'');
              });
             state.chapters_one = state.chaptersCurrentNovel.slice(0, 25);
             state.chapters_two = state.chaptersCurrentNovel.slice(25);
         },
         setcurrentNovel : function (state,currentnovel){
             state.currentNovel = currentnovel;
+            
         },
         setLastPagecurrentNovel : function (state,last_page){
             state.last_page = last_page;
@@ -133,7 +134,7 @@ export default createStore({
         updateNovels:function(state,novels){
             state.novels = novels;
             state.novels.forEach((it)=>{
-               it.name = it.link.slice(1, -5).replace(/.html/g,'');
+               it.title = it.url.slice(1, -5).replace(/.html/g,'');
             });
         }
     },
@@ -192,7 +193,7 @@ export default createStore({
         getNovelsLatest : async ({commit,state})=>{
            
             try {
-                const response = await api.get(`novelfull/latest-novel?page=${state.page}`);
+                const response = await api.get(`novels/novelfull?page=${state.page}`);
                 if (response.status == 200) {
                     commit('setStatus','Success Get Novels Latest');
                     commit('updateNovels',response.data);
@@ -206,13 +207,15 @@ export default createStore({
                 console.error(error);
             }
         },
-        getNovel : async ({commit},name)=>{
+        getNovel : async ({commit},params)=>{
            
             try {
-                const response = await api.get(`novelfull/novel?link=${name}.html`);
+                const response = await api.get(`novels/novelfull/novel?page=${params.page}&url=${params.title}.html`);
                 if (response.status == 200) {
                     commit('setStatus','Success Get Novel');
                     commit('setcurrentNovel',response.data);
+                    commit('setchapterscurrentNovel',response.data.chapters);
+                    commit('setLastPagecurrentNovel',response.data.last_page);
                 }
                 else {
                     commit('setStatus','Failure');
@@ -243,7 +246,7 @@ export default createStore({
         getChapterContent : async ({commit},params)=>{
            
             try {
-                const response = await api.get(`novelfull/novel-chapter-content?link=/${params.name}/${params.chapter}.html`);
+                const response = await api.get(`novels/novelfull/chapter?url=/${params.name}/${params.chapter}.html`);
                 if (response.status == 200) {
                     commit('setStatus','Success Get Chapter Content');
                     commit('setcontentChapter',response.data);

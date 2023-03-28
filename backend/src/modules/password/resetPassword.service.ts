@@ -62,8 +62,9 @@ export default class ResetPasswordService{
                 throw new BadRequestException('Bad reset password token');
         }
     }
-//vérifier quand l'email n'existe pas
+    
     public async resetPassword(email:string,password:string){
+        await this.userService.getUserByEmail(email);
         const result = await this.userService.updatePassword(email,password);
         console.log(result);
         return result ;

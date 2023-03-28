@@ -10,24 +10,35 @@
                     >
                         <div class="d-flex justify-center">
                             <v-card class="card" >
-                            <v-img
-                                :src="currentNovel.image"
-                                class="bg-white image"
-                                lazy-src="https://picsum.photos/id/11/100/60"
-                                cover
+                                <v-img
+                                    :src="currentNovel.coverImageUrl"
+                                    class="bg-white image"
+                                    lazy-src="https://picsum.photos/id/11/100/60"
+                                    cover
+                                    
+                                >
+                                    <template v-slot:placeholder>
+                                    <div class="d-flex align-center justify-center fill-height">
+                                        <v-progress-circular
+                                        color="grey-lighten-4"
+                                        indeterminate
+                                        ></v-progress-circular>
+                                    </div>
+                                    </template>
+                                </v-img>
+                            </v-card>
+                            
+                        </div>
+                        <v-progress-linear
+                                class="mt-4" 
+                                v-model="progress"
+                                height="25"
+                                color="light-blue-accent-2"
+                                v-if="showProgress"
                                 
                             >
-                                <template v-slot:placeholder>
-                                <div class="d-flex align-center justify-center fill-height">
-                                    <v-progress-circular
-                                    color="grey-lighten-4"
-                                    indeterminate
-                                    ></v-progress-circular>
-                                </div>
-                                </template>
-                            </v-img>
-                            </v-card>
-                        </div>
+                                <strong>{{ Math.ceil(progress) }}%</strong>
+                            </v-progress-linear>
                     </v-col>
 
                     <v-col
@@ -111,7 +122,7 @@
                         </div>
                         <div class="buttons">
                             <v-btn
-                            class="mr-4"
+                            class="btns-item"
                             rounded="pill"
                             color="light-blue"
                             >
@@ -120,11 +131,25 @@
 
                             <v-btn
                             rounded="pill"
+                            class="btns-item"
                             color="light-blue"
                             prepend-icon="mdi-plus"
                             >
                             Add To Library
                             </v-btn>
+                            
+                            <v-btn
+                            ref="downloadBtn"
+                            class="btns-item"
+                            rounded="pill"
+                            color="light-blue"
+                            prepend-icon="mdi-download"
+                            @click="startDownload"
+                            >
+                            Download
+                            </v-btn>
+
+                            
                         </div>
 
                     </v-col>
@@ -169,7 +194,7 @@
                                 ></v-progress-circular>
                             </div>
                             <div v-else>
-                                <v-row>
+                                <v-row >
  
                                 <v-col
                                     cols="12"
@@ -177,31 +202,33 @@
                                     md="6"
                                 >
                                     
-                                    <v-table>
+                                    <v-table  >
                                         <tbody>
                                         <tr
-                                            v-for="(chapter, index) in chapters_one" :key="index"
-                                        >
-                                        
-                                            <td>
-                                                <div class="d-flex justify-space-between">
-                                                    <span class="item ml-2" 
-                                                    @click="$router.push({ name: 'chapter', params:{name: this.$route.params.name, chapter: chapter.name} })" 
-                                                    >
-                                                    {{ chapter.title }}
-                                                    </span>
-                                                    <!-- <v-progress-circular
-                                                        :rotate="360"
-                                                        :size="30"
-                                                        :width="6"
-                                                        :model-value="value"
-                                                        color="blue-grey-lighten-1"
+                                            v-for="(chapter, index) in chapters_one" :key="index"            
+                                        >          
+                                            <td >
+                                                
+                                                <v-row no-gutters style="max-width: 372px; max-height: 50px;">
+                                                    <v-col cols="2" >
+                                                            <v-checkbox v-model="chapter.selected"  ></v-checkbox>
+                                                    </v-col>
+                                                    <v-col style="margin-top: 15px;">
                                                         
-                                                    >
-                                                        <v-icon :size="10">mdi-download</v-icon>
-                                                    </v-progress-circular> -->
-                                                    <v-icon :size="20" class="download" @click="downloadChapter(chapter.link)">mdi-download</v-icon>
-                                                </div>
+                                                            <div class="d-flex justify-space-between">
+                                                                <span class="item mr-2"  :title="chapter.title"
+                                                                    @click="$router.push({ name: 'chapter', params:{name: this.$route.params.name, chapter: chapter.title} })" 
+                                                                    >
+                                                                    {{ chapter.title }}
+                                                                </span> 
+                                                                <v-icon :size="20" class="download" @click="downloadChapter(chapter.url)">mdi-download</v-icon>
+                                                            </div>
+                                                            
+                                                        
+                                                    </v-col>
+                                                    
+                                                </v-row>
+                                                     
                                                 
                                             </td>
                                         </tr>
@@ -215,34 +242,67 @@
                                     sm="10"
                                     md="6"
                                 >
-                                    <v-table>
-                                        <tbody>
-                                        <tr
-                                            v-for="(chapter, index) in chapters_two" :key="index"
-                                        >
-                                            <td>
-                                                <div class="d-flex justify-space-between">
-                                                    <span class="item ml-2" 
-                                                    @click="$router.push({ name: 'chapter', params:{name: this.$route.params.name, chapter: chapter.name} })" 
-                                                    >
-                                                    {{ chapter.title }}
-                                                    </span>
-                                                    <!-- <v-progress-circular
-                                                        :rotate="360"
-                                                        :size="30"
-                                                        :width="6"
-                                                        :model-value="value"
-                                                        color="blue-grey-lighten-1"
+
+                                <v-table>
+                                    <!-- <thead>
+                                    <tr>
+                                        <th class="text-left">
+                                        Name
+                                        </th>
+                                       
+                                    </tr>
+                                    </thead> -->
+                                    <tbody>
+                                    <tr
+                                        v-for="(chapter, index) in chapters_two"
+                                        :key="index"
+                                    >
+                                        <td>
+                                            <v-row>
+                                            
+                                               <v-checkbox v-model="chapter.selected"></v-checkbox> 
+                                            {{ chapter.title }} 
+                                            </v-row>
+                                            
+                                        
+                                        </td>
+                                        
+                                    </tr>
+                                </tbody>
+  </v-table>
+                                    <!-- <v-table >
+                                            <tbody>
+                                            <tr
+                                                v-for="(chapter, index) in chapters_two" :key="index"            
+                                            >          
+                                                <td >
+                                                    
+                                                    <v-row no-gutters style="max-width: 372px; max-height: 50px;">
+                                                        <v-col cols="2" >
+                                                                <v-checkbox v-model="chapter.selected"></v-checkbox>
+                                                        </v-col>
+                                                        <v-col style="margin-top: 15px;">
+                                                            
+                                                                <div class="d-flex justify-space-between">
+                                                                    <span class="item mr-2 text-truncate"  :title="chapter.title" 
+                                                                        @click="$router.push({ name: 'chapter', params:{name: this.$route.params.name, chapter: chapter.title} })" 
+                                                                        >
+                                                                        {{ chapter.title }}
+                                                                    </span> 
+                                                                    <v-icon :size="20" class="download" @click="downloadChapter(chapter.url)">mdi-download</v-icon>
+                                                                </div>
+                                                                
+                                                            
+                                                        </v-col>
                                                         
-                                                    >
-                                                        <v-icon :size="10">mdi-download</v-icon>
-                                                    </v-progress-circular> -->
-                                                    <v-icon :size="20" class="download" @click="downloadChapter(chapter.link)">mdi-download</v-icon>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </v-table>
+                                                    </v-row>
+                                                        
+                                                    
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                    </v-table> -->
+                                    
 
                                 </v-col>
 
@@ -283,6 +343,7 @@
 <script>
 import { mapMutations, mapState } from 'vuex'
 import api from "../api";
+import JSZip from 'jszip';
 export default {
     name: 'novel-view',
     props:{
@@ -294,12 +355,12 @@ export default {
 
     },
     mounted () {
-        this.interval = setInterval(() => {
-        if (this.value === 100) {
-            return (this.value = 0)
-        }
-        this.value += 10
-        }, 1000)
+        // this.interval = setInterval(() => {
+        // if (this.value === 100) {
+        //     return (this.value = 0)
+        // }
+        // this.value += 10
+        // }, 1000)
     },
 
     data: () => ({
@@ -326,14 +387,22 @@ export default {
             status:'Ongoing',
             author:'Moine des six illusions',
             description:"A lightning strike transmigrated Zu An into another world. In that world, he was known as the tr*sh of Brightmoon City, but for some reason, he was married to the gorgeous and highly talented daughter of the Chu clan? What? I’m a transmigrator but I don’t have any talent for cultivation? Why are there so many people out for my life? And most importantly of all, how in the world did I get on the bed of my sister-in-law on my wedding night?! It was a nightmarish starting point for Zu An, but fortunately, as a famed keyboard warrior in his previous life, the world gave him a keyboard in this life too so that he could turn things around. Through his trolling and flaming, he shall stand atop the corpses of his burned enemies and rise to the top of the world! "
-        }
+        },
+        showProgress: false,
+        progress: 0
+        
     }),
     async created(){
         try {
-				await this.$store.dispatch('getNovel',this.$route.params.name);
+				await this.$store.dispatch('getNovel',{title:this.$route.params.name,page:this.page});
 				if(this.status == 'Success Get Novel'){
 					console.log('Success loading novel');
-                    
+                    this.chapters_one.forEach(chapter => {
+                        chapter.selected = false;
+                    });
+                    this.chapters_two.forEach(chapter => {
+                        chapter.selected = false;
+                    });
 				}		
 			} catch (error) {
 				console.error(error);
@@ -347,73 +416,131 @@ export default {
         lengthDescription() {
             return this.currentNovel.description.length;
         },
+        selectedChapters(){
+            let tab1 =[];
+            let tab2 =[];
+            tab1 = this.chapters_one.filter(c=>c.selected == true);
+            tab2 = this.chapters_two.filter(c=>c.selected == true);
+            return tab1.concat(tab2);
+        }
     },
     methods:{
         ...mapMutations(['setPage','setNovels','setchapterscurrentNovel']),
 
-      async downloadChapter(link){
+        async downloadChapter(link){
+                try {
+                    const response = await api.get(`novels/novelfull/chapter?url=${link}`);
+                    if (response.status == 200) {
+                    
+                    const chapter  = response.data;
+                    const html = `
+                    <html>
+                    <head>
+                        <title>${chapter.titleNovel} - ${chapter.title}</title>
+                    </head>
+                    <body>
+                        <h1>${chapter.titleNovel}</h1>
+                        <h2>${chapter.title}</h2>
+                        <p>
+                        ${chapter.content.join("<br><br>")}
+                        </p>
+                    </body>
+                    </html>
+                    `;
+                    // Créer un lien pour télécharger le fichier HTML
+                    const link = document.createElement("a");
+                    link.href = URL.createObjectURL(
+                        new Blob([html], { type: "text/html" })
+                    );
+                    link.setAttribute("download", `${chapter.title}.html`);
+                    document.body.appendChild(link);
+                    link.click();
+                    }   
+                    else {
+                        console.log('ERROR');
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+        } ,
+        async updateData(page) {
+            this.setPage(page);
+            this.setchapterscurrentNovel([]);
             try {
-                const response = await api.get(`novelfull/novel-chapter-content?link=${link}`);
-                if (response.status == 200) {
-                
-                const chapter  = response.data;
-                const html = `
-                <html>
-                <head>
-                    <title>${chapter.title_novel} - ${chapter.title_chapter}</title>
-                </head>
-                <body>
-                    <h1>${chapter.title_novel}</h1>
-                    <h2>${chapter.title_chapter}</h2>
-                    <p>
-                    ${chapter.content.join("<br><br>")}
-                    </p>
-                </body>
-                </html>
-                `;
-                // Créer un lien pour télécharger le fichier HTML
-                const link = document.createElement("a");
-                link.href = URL.createObjectURL(
-                    new Blob([html], { type: "text/html" })
-                );
-                link.setAttribute("download", `${chapter.title_chapter}.html`);
+                await this.updateListChapters();		
+            } catch (error) {
+                console.error(error);
+                setTimeout(() => {
+                this.updateData(page);
+                }, 5000);
+            }
+        },
+
+        async updateListChapters(){
+            try {
+                    await this.$store.dispatch('getNovel',{title:this.$route.params.name,page:this.page});
+                    if(this.status == 'Success Get Novel'){
+                        console.log('Good loading list chapter novel');
+                        console.log(this.chaptersCurrentNovel);
+                        
+            
+                    }		
+                } catch (error) {
+                    console.error(error);
+                }
+        },
+
+        async downloadSelectedChapters(chapters) {
+
+            try {
+                const zip = new JSZip();
+                const totalChapters = chapters.length;
+                let downloadedChapters = 0;
+                for (const chapter of chapters) {
+                    const response = await api.get(`novels/novelfull/chapter?url=${chapter.url}`);
+                    
+                    if (response.status === 200) {
+                        const chapterContent = response.data;
+                        const chapterHTML = `
+                        <html>
+                            <head>
+                            <title>${chapterContent.titleNovel} - ${chapterContent.title}</title>
+                            </head>
+                            <body>
+                            <h1>${chapterContent.titleNovel}</h1>
+                            <h2>${chapterContent.title}</h2>
+                            <p>${chapterContent.content.join('<br><br>')}</p>
+                            </body>
+                        </html>
+                        `;
+                        zip.file(`${chapter.title}.html`, chapterHTML);
+                    } else {
+                        console.error(`Error downloading chapter ${chapter.title}`);
+                    }
+
+                    downloadedChapters++;
+                    this.progress = (downloadedChapters / totalChapters) * 100
+                }
+
+                const zipBlob = await zip.generateAsync({ type: 'blob' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(zipBlob);
+                link.download = `${this.currentNovel.title}.zip`;
                 document.body.appendChild(link);
                 link.click();
-                }   
-                else {
-                    console.log('ERROR');
-                }
             } catch (error) {
                 console.error(error);
             }
-      } ,
-      async updateData(page) {
-          this.setPage(page);
-          this.setchapterscurrentNovel([]);
-          try {
-            await this.updateListChapters();		
-          } catch (error) {
-            console.error(error);
-            setTimeout(() => {
-              this.updateData(page);
-            }, 5000);
-          }
-      },
-
-      async updateListChapters(){
-        try {
-				await this.$store.dispatch('getListChapterNovel',{name:this.$route.params.name,page:this.page});
-				if(this.status == 'Success Get List Chapter Novel'){
-					console.log('Good loading list chapter novel');
-                    console.log(this.chaptersCurrentNovel);
-                    
-          
-				}		
-			} catch (error) {
-				console.error(error);
-			}
-      }
-    }
+        },
+        async startDownload() {
+        
+            this.showProgress = true;
+            this.progress = 0;
+            await this.downloadSelectedChapters(this.selectedChapters);
+            this.showProgress = false;
+        }
+  },
+      
 
 }
 </script>
@@ -438,9 +565,7 @@ export default {
         margin-right: auto;
         max-width: 980px;
     }
-    .row{
-       
-    }
+    
     .download:hover{
         cursor: pointer;
     }
@@ -450,7 +575,7 @@ export default {
     }
 
     .buttons{
-        margin-top: 125px;
+        margin-top: 100px;
     }
     .raiting-two{
         display: none;
@@ -463,6 +588,14 @@ export default {
     .v-list-item {
         width: 400px;
        
+    }
+
+    table{
+        overflow: hidden;
+    }
+
+    .btns-item{
+        margin: 10px;
     }
 
 
@@ -517,9 +650,14 @@ export default {
             line-height: 1.5rem;
             margin-top: 40px;
         }
+        .novel-infos{   
+            height: 440px;
+        }
     }
 
     @media (max-width: 600px) {
+
+        
 
         .card{
           
@@ -531,7 +669,7 @@ export default {
         }
 
         .novel-infos{   
-            height: 750px;
+            height: 800px;
         }
 
         .container{
@@ -546,7 +684,7 @@ export default {
             visibility: hidden;
         }
         .buttons{
-            margin-top: -10px;
+            margin-top: -20px;
         }
 
     }
