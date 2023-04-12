@@ -5,8 +5,12 @@
         
         <div class="chapter-title text-center"> 
             
-                <div class="text-h5 item" @click="$router.push({ name: 'novel', params:{name: this.$route.params.name } })">{{ contentChapterCurrent.titleNovel }}</div>
-                <div class="text-h7 item my-2">{{ contentChapterCurrent.titleNovel }}</div>
+                <div class="text-h5 item" @click="$router.push({ 
+                    name: 'novel', 
+                    params:{name: this.$route.params.name } 
+                    })"
+                >{{ contentChapterCurrent.titleNovel }}</div>
+                <div class="text-h7 item my-2">{{ contentChapterCurrent.titleNovel }} - {{  contentChapterCurrent.title }}</div>
         </div>
         <div class="chapter-buttons d-flex justify-center  my-4" style="gap: 1rem">
 
@@ -14,7 +18,7 @@
             color="light-blue-accent-2 "
             prepend-icon = "mdi-arrow-left"
             @click="prevChapter"
-            v-bind:disabled="!(contentChapterCurrent.prev_chap!=undefined)" 
+            v-bind:disabled="!(contentChapterCurrent.prevUrl!=undefined)" 
             >
             <span 
                 class="text-btn" 
@@ -38,7 +42,7 @@
             color="light-blue-accent-2"
             append-icon ="mdi-arrow-right"
             @click="nextChapter"
-            v-bind:disabled="!(contentChapterCurrent.next_chap!=undefined)"
+            v-bind:disabled="!(contentChapterCurrent.nextUrl!=undefined)"
             >
             <span 
                 class="text-btn"
@@ -62,7 +66,7 @@
                 color="light-blue-accent-2 "
                 prepend-icon = "mdi-arrow-left"
                 @click="prevChapter"
-                v-bind:disabled="!(contentChapterCurrent.prev_chap!=undefined)" 
+                v-bind:disabled="!(contentChapterCurrent.prevUrl!=undefined)" 
             >
             <span 
                 class="text-btn" 
@@ -86,7 +90,7 @@
                 color="light-blue-accent-2"
                 append-icon ="mdi-arrow-right"
                 @click="nextChapter"
-                v-bind:disabled="!(contentChapterCurrent.next_chap!=undefined)"
+                v-bind:disabled="!(contentChapterCurrent.nextUrl!=undefined)"
             >
             <span 
                 class="text-btn"

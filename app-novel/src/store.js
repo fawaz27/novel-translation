@@ -261,7 +261,7 @@ export default createStore({
         updateCurrentPage : async ({commit,state})=>{
            
             try {
-                const response = await api.get(`novelfull/latest-novel?page=${state.page}`);
+                const response = await api.get(`novels/novelfull?page=${state.page}`);
                 if (response.status == 200) {
                     commit('setStatus','Success Get Novels Latest');
                     commit('updateNovels',response.data);

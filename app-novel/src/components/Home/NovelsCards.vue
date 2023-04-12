@@ -14,8 +14,8 @@
         <v-row  justify-end>
                 <v-col
                   v-for="(novel,index) in novels"  :key="index"
-                  xs="6" sm="4" md="3" lg="2" xl
-                  align-start
+                  xs="6" sm="4" md="3" lg="2" 
+                  
                 >
                 <div class="d-flex justify-center">
                   <v-card height="250" width="170" class="card" 

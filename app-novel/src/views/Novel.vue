@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="novel-infos">
+        <div  class="novel-infos" :class="theme ==='light' ? 'novel-infos-ligth' : 'novel-infos-dark'">
 
             <div class="g_wrap">
                 <v-row class="row">
@@ -173,12 +173,29 @@
                 <v-window v-model="tab">
                     <v-window-item :value="1">
                         <v-container fluid>
-                                <div class="text-h5 my-5">Synopsis</div>
-                                <!-- <p v-if="lengthDescription > 150"> {{ truncatedDescription }} 
-                                    <v-btn @click="showMore = true">Show More</v-btn>
-                                </p>
-                                <p v-else>{{ currentNovel.description }}</p> -->
-                                <p>{{ currentNovel.description }}</p>
+                                <div class="text-h4 my-5">Synopsis</div>
+                                <div v-if="lengthDescription >400">
+                                    <p style="font-size: 20px;" v-html="formattedText"></p>
+                                    <v-row justify="center" class="my-4">
+                                        <v-btn 
+                                        v-if="!show"
+                                        prepend-icon="mdi-plus" 
+                                        @click="showMore"
+                                        >Show More
+                                        </v-btn>
+                                        <v-btn 
+                                        v-else
+                                        prepend-icon="mdi-minus" 
+                                        @click="showLess"
+                                        >Show Less
+                                        </v-btn>
+                                    </v-row>
+                                    
+                                </div>
+                                <div v-else>
+                                    <p style="font-size: 20px;" v-html="formattedText"></p>
+                                </div>
+                                
                             
                         </v-container>
                     </v-window-item>
@@ -200,110 +217,114 @@
                                     cols="12"
                                     sm="10"
                                     md="6"
-                                >
-                                    
+                                    class="col-custom-sm-6"
+                                >            
                                     <v-table  >
-                                        <tbody>
-                                        <tr
-                                            v-for="(chapter, index) in chapters_one" :key="index"            
-                                        >          
-                                            <td >
-                                                
-                                                <v-row no-gutters style="max-width: 372px; max-height: 50px;">
-                                                    <v-col cols="2" >
-                                                            <v-checkbox v-model="chapter.selected"  ></v-checkbox>
-                                                    </v-col>
-                                                    <v-col style="margin-top: 15px;">
+                                                <tbody>
+                                                <tr
+                                                    v-for="(chapter, index) in chapters_one" :key="index"            
+                                                >          
+                                                    <td class="rowtable " @mouseover="chapter.isHovering = true" @mouseleave="chapter.isHovering = false">
                                                         
-                                                            <div class="d-flex justify-space-between">
-                                                                <span class="item mr-2"  :title="chapter.title"
-                                                                    @click="$router.push({ name: 'chapter', params:{name: this.$route.params.name, chapter: chapter.title} })" 
-                                                                    >
-                                                                    {{ chapter.title }}
-                                                                </span> 
-                                                                <v-icon :size="20" class="download" @click="downloadChapter(chapter.url)">mdi-download</v-icon>
+                                                        <v-row no-gutters class="row"   >
+                                                            <div style="width:20%" >
+                                                                    <v-checkbox v-if="chapter.isHovering || chapter.selected "  v-model="chapter.selected"  ></v-checkbox>
                                                             </div>
+                                                            <div class="truncate">    
+                                                                    <span class="item mr-2"  
+                                                                    :title="chapter.title" 
+                                                                    @click="$router.push({ 
+                                                                        name: 'chapter', 
+                                                                        params:{
+                                                                            name: this.$route.params.name, 
+                                                                            chapter: chapter.title
+                                                                        } 
+                                                                    })" 
+                                                                    >
+                                                                        {{ chapter.title }}
+                                                                    </span>                                                                         
+                                                            </div>
+                                                            <div>
+                                                                <v-hover>
+                                                                    <template v-slot:default="{ isHovering, props }">
+                                                                    
+                                                                        <v-icon
+                                                                        v-bind="props"
+                                                                        :size="25" 
+                                                                        style="margin-top: 15px;" 
+                                                                        class="download"
+                                                                        @click="downloadChapter(chapter.url)"
+                                                                        :color="isHovering ? 'primary' : undefined"
+                                                                        >
+                                                                        mdi-download
+                                                                        </v-icon>
+                                                                    </template>
+                                                                </v-hover> 
+                                                            </div>
+                                                        </v-row>
                                                             
                                                         
-                                                    </v-col>
-                                                    
-                                                </v-row>
-                                                     
-                                                
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </v-table>
-                                
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                    </v-table>               
                                 </v-col>
 
                                 <v-col
                                     cols="12"
                                     sm="10"
                                     md="6"
+                                    class="col-custom-sm-6"
                                 >
-
-                                <v-table>
-                                    <!-- <thead>
-                                    <tr>
-                                        <th class="text-left">
-                                        Name
-                                        </th>
-                                       
-                                    </tr>
-                                    </thead> -->
-                                    <tbody>
-                                    <tr
-                                        v-for="(chapter, index) in chapters_two"
-                                        :key="index"
-                                    >
-                                        <td>
-                                            <v-row>
-                                            
-                                               <v-checkbox v-model="chapter.selected"></v-checkbox> 
-                                            {{ chapter.title }} 
-                                            </v-row>
-                                            
-                                        
-                                        </td>
-                                        
-                                    </tr>
-                                </tbody>
-  </v-table>
-                                    <!-- <v-table >
+                                    <v-table  >
                                             <tbody>
                                             <tr
                                                 v-for="(chapter, index) in chapters_two" :key="index"            
                                             >          
-                                                <td >
+                                                <td class="rowtable ">
                                                     
-                                                    <v-row no-gutters style="max-width: 372px; max-height: 50px;">
-                                                        <v-col cols="2" >
-                                                                <v-checkbox v-model="chapter.selected"></v-checkbox>
-                                                        </v-col>
-                                                        <v-col style="margin-top: 15px;">
-                                                            
-                                                                <div class="d-flex justify-space-between">
-                                                                    <span class="item mr-2 text-truncate"  :title="chapter.title" 
-                                                                        @click="$router.push({ name: 'chapter', params:{name: this.$route.params.name, chapter: chapter.title} })" 
-                                                                        >
-                                                                        {{ chapter.title }}
-                                                                    </span> 
-                                                                    <v-icon :size="20" class="download" @click="downloadChapter(chapter.url)">mdi-download</v-icon>
-                                                                </div>
+                                                    <v-row no-gutters class="row">
+                                                        <div style="width:20%" >
+                                                                <v-checkbox v-model="chapter.selected"  ></v-checkbox>
+                                                        </div>
+                                                        <div class="truncate">    
+                                                                <span class="item mr-2"  
+                                                                :title="chapter.title" 
+                                                                @click="$router.push({ 
+                                                                    name: 'chapter', 
+                                                                    params:{
+                                                                        name: this.$route.params.name, 
+                                                                        chapter: chapter.title
+                                                                    } 
+                                                                })" 
+                                                                >
+                                                                    {{ chapter.title }}
+                                                                </span>                                                                         
+                                                        </div>
+                                                        <div>
+                                                            <v-hover>
+                                                                <template v-slot:default="{ isHovering, props }">
                                                                 
-                                                            
-                                                        </v-col>
-                                                        
+                                                                    <v-icon
+                                                                    v-bind="props"
+                                                                    :size="25" 
+                                                                    style="margin-top: 15px;" 
+                                                                    class="download"
+                                                                    @click="downloadChapter(chapter.url)"
+                                                                    :color="isHovering ? 'primary' : undefined"
+                                                                    >
+                                                                    mdi-download
+                                                                    </v-icon>
+                                                                </template>
+                                                            </v-hover> 
+                                                        </div>
                                                     </v-row>
                                                         
                                                     
                                                 </td>
                                             </tr>
                                             </tbody>
-                                    </v-table> -->
-                                    
-
+                                    </v-table>
                                 </v-col>
 
                                 </v-row>
@@ -312,10 +333,11 @@
                                     <v-container>
                                     <v-row justify="center">
                                         <v-col cols="8">
-                                        <v-container class="max-width">
+                                        <v-container class="">
                                             <v-pagination
                                             v-model="page"
                                             class="my-4"
+                                            v
                                             :length="last_page"
                                             @update:model-value="updateData"
                                             ></v-pagination>
@@ -364,8 +386,9 @@ export default {
     },
 
     data: () => ({
+        hoveredIndex: null,
+        isHovering: false,
         value:0,
-        showMore: false,
         currentPage: 1,
         perPage: 8,
         page:1,
@@ -389,7 +412,9 @@ export default {
             description:"A lightning strike transmigrated Zu An into another world. In that world, he was known as the tr*sh of Brightmoon City, but for some reason, he was married to the gorgeous and highly talented daughter of the Chu clan? What? I’m a transmigrator but I don’t have any talent for cultivation? Why are there so many people out for my life? And most importantly of all, how in the world did I get on the bed of my sister-in-law on my wedding night?! It was a nightmarish starting point for Zu An, but fortunately, as a famed keyboard warrior in his previous life, the world gave him a keyboard in this life too so that he could turn things around. Through his trolling and flaming, he shall stand atop the corpses of his burned enemies and rise to the top of the world! "
         },
         showProgress: false,
-        progress: 0
+        progress: 0,
+        formattedText: '',
+        show:false
         
     }),
     async created(){
@@ -397,11 +422,17 @@ export default {
 				await this.$store.dispatch('getNovel',{title:this.$route.params.name,page:this.page});
 				if(this.status == 'Success Get Novel'){
 					console.log('Success loading novel');
+                    if(this.lengthDescription > 400)
+                        this.formatText(this.truncatedtext(this.currentNovel.description));
+                    else
+                        this.formatText(this.currentNovel.description);
                     this.chapters_one.forEach(chapter => {
                         chapter.selected = false;
+                        chapter.isHovering = false;
                     });
                     this.chapters_two.forEach(chapter => {
                         chapter.selected = false;
+                        chapter.isHovering = false;
                     });
 				}		
 			} catch (error) {
@@ -409,10 +440,8 @@ export default {
 			}
     },
     computed:{
-        ...mapState(['currentNovel','chaptersCurrentNovel','chapters_one','chapters_two','last_page']),
-        truncatedDescription() {
-            return this.currentNovel.description.substring(0, 150);
-        },
+        ...mapState(['currentNovel','chaptersCurrentNovel','chapters_one','chapters_two','last_page','status','theme']),
+        
         lengthDescription() {
             return this.currentNovel.description.length;
         },
@@ -538,7 +567,28 @@ export default {
             this.progress = 0;
             await this.downloadSelectedChapters(this.selectedChapters);
             this.showProgress = false;
-        }
+        },
+        formatText(text) {
+            const phrases = text.split('. ');
+            this.formattedText = phrases.join('. <br>');  
+        },
+        truncatedtext(text) {
+            return text.substring(0, 400)+'...';
+        },
+        showMore(){
+            this.formatText(this.currentNovel.description);
+            this.show = !this.show;
+        },
+        showLess(){
+            this.formatText(this.truncatedtext(this.currentNovel.description));
+            this.show = !this.show;
+        },
+        toggleAllCheckboxes() {
+            const allSelected = this.chapters_one.every(chapter => chapter.selected)
+            this.chapters_one.forEach(chapter => {
+                chapter.selected = !allSelected
+            })
+        },
   },
       
 
@@ -554,8 +604,15 @@ export default {
     .image{
         height: 412px;
     }
-    .novel-infos{
+
+    .novel-infos-black{
+        background-color: #17171c;
+    }
+    .novel-infos-ligth{
         background-color: #f5f6fc;
+    }
+    .novel-infos{
+        
         height: 470px;
         margin-top: 26px;
         
@@ -590,13 +647,31 @@ export default {
        
     }
 
-    table{
-        overflow: hidden;
+    .rowtable{
+        max-width: 372px; 
+        white-space: nowrap; 
+        overflow: hidden; 
+        text-overflow: ellipsis;
     }
 
     .btns-item{
         margin: 10px;
     }
+
+    .truncate{
+        width: 70%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 15px;
+    }
+
+    .row{
+        max-width: 90%; 
+        max-height: 50px;
+        
+    }
+
 
 
     @media (max-width: 600px) {
@@ -629,6 +704,15 @@ export default {
             margin-top: 20px;
         }
 
+    }
+
+    @media (min-width: 700px) and (max-width: 960px) {
+        
+       .center{
+        display: flex;
+        justify-content: center;
+       }
+        
     }
 
     @media (max-width: 880px) {

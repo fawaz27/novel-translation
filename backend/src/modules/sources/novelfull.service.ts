@@ -192,6 +192,9 @@ export class NovelFullService implements SourcesService{
             novel.status = ((infos.find('.info')).find('div').eq(4)).find('a').text();
             novel.last_page = Number($('li.last a').attr('data-page')) +1 ;
             
+            if(Number.isNaN(novel.last_page))   
+                novel.last_page = Number($('li.active a').last().attr('data-page')) +1 ;
+            
             const listChapter = $('div#list-chapter.col-xs-12');
             const rows = listChapter.find('.row a');
             const result: Chapter[] = [];
