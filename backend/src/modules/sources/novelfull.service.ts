@@ -30,7 +30,6 @@ export class NovelFullService implements SourcesService{
 
             await Promise.all(data.map(async (it) => {
                 const image  = await this.getImg(it.url);      
-                console.log(image);
                 it.coverImageUrl = `${this.baseUrl}${image}`;
                 // result.push({title:it.title,url:it.url, coverImageUrl: `${this.baseUrl}${image}` });
             }));
@@ -91,6 +90,35 @@ export class NovelFullService implements SourcesService{
         let novels: Novel[]=[];
         try {
             const url = 'completed-novel';
+            const response = await this.http.get(`${this.baseUrl}/${url}?page=${page}`, this.http.headers);
+
+            const $ = load(response.data);
+            const listPage = $('.col-xs-12.col-sm-12.col-md-9.col-truyen-main.archive');
+            if (!listPage) {
+                throw new Error(`Error while parsing the HTML : listPage not found`);
+            }
+            const rows = listPage.find('.row');
+            
+            rows.each((i, row) =>  {
+                let novel :Novel= {title:"",url:""};
+                novel.title = $(row).find('.col-xs-7 a').text();
+                novel.url =  $(row).find('.col-xs-7 a').attr('href') as string;
+                novels.push(novel);
+            
+            });
+            novels = await this.matchImg(novels)
+            return novels;
+        } catch (error) {
+            return novels;
+        }
+        
+        
+    };
+
+    async getNovelsPopular(page:number): Promise<Novel[]>{
+        let novels: Novel[]=[];
+        try {
+            const url = 'most-popular';
             const response = await this.http.get(`${this.baseUrl}/${url}?page=${page}`, this.http.headers);
 
             const $ = load(response.data);

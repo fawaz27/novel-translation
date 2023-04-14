@@ -7,14 +7,14 @@
 
 			<v-col
 				
-				class="mt-1"
+				class="mt-1 d-flex justify-space-between "
 				cols="12"
 				style="border-bottom: 1px solid #ccc; margin-bottom: 10px; "	
 				>
-				<span class="text-h4 text-decoration-underline title">Novel Popular</span >
+				<span class="text-h4">Most Popular</span >
+				<span class="text-h5 title" style="color: #4179E2;" >See More</span >
 			</v-col>
-			<div  
-				v-if="novels.length==0" 
+			<div v-if="novelsPopular.length==0" 
 				class="d-flex align-center  justify-center" 
 				style="width: 100%;height: 150px;" 
 			>
@@ -36,7 +36,7 @@
 				show-arrows
 				>
 					<v-slide-group-item
-						v-for="(novel,index) in novels"  :key="index"
+						v-for="(novel,index) in novelsPopular"  :key="index"
 						
 					>
 						
@@ -66,7 +66,7 @@
 							@click="$router.push({ name: 'novel', params:{name: novel.title } })"
 						
 							>
-							{{  novel.title.replaceAll('-', ' ') }}
+							<span :title="novel.title.replaceAll('-', ' ')">{{  novel.title.replaceAll('-', ' ') }}</span> 
 						</div>
 					</div>
 				
@@ -77,14 +77,14 @@
 
 			<v-col
              
-              class="mt-1"
+              class="mt-1 d-flex justify-space-between"
               cols="12"
 				style="border-bottom: 1px solid #ccc; margin-bottom: 10px;"
             >
-              <span class="text-h4 text-decoration-underline title">Novel Last </span >
+				<span class="text-h4">Latest Release </span >
+				<span class="text-h5 title" style="color: #4179E2;" >See More</span >
             </v-col>
-			<div  
-				v-if="novels.length==0" 
+			<div v-if="novels.length==0" 
 				class="d-flex align-center  justify-center" 
 				style="width: 100%;height: 150px;" 
 			>
@@ -136,7 +136,7 @@
 							@click="$router.push({ name: 'novel', params:{name: novel.title } })"
 						
 							>
-							{{  novel.title.replaceAll('-', ' ') }}
+							<span :title="novel.title.replaceAll('-', ' ')">{{  novel.title.replaceAll('-', ' ') }}</span> 
 						</div>
 					</div>
 				
@@ -147,15 +147,15 @@
 
 			<v-col
              
-              class="mt-1"
+              class="mt-1 d-flex justify-space-between"
               cols="12"
 				style="border-bottom: 1px solid #ccc;"           
 			>
-              <span class="text-h4 text-decoration-underline title " >Novel Completed </span >
+				<span class="text-h4" >Novels Completed</span >
+				<span class="text-h5 title" style="color: #4179E2;" >See More</span >
             </v-col>
 
-			<div  
-				v-if="novels.length==0" 
+			<div v-if="novelsCompleted.length==0" 
 				class="d-flex align-center  justify-center" 
 				style="width: 100%;height: 150px;" 
 			>
@@ -171,7 +171,7 @@
 			</div>
 
 			<v-col
-			v-for="(novel,index) in novels"  :key="index"
+			v-for="(novel,index) in novelsCompleted.slice(0, 16)"  :key="index"
 			cols="6" sm = "3"
 			md="2"
 			xl="1"
@@ -206,7 +206,7 @@
 						@click="$router.push({ name: 'novel', params:{name: novel.title } })"
 					
 						>
-						{{  novel.title.replaceAll('-', ' ') }}
+						<span :title="novel.title.replaceAll('-', ' ')">{{  novel.title.replaceAll('-', ' ') }}</span> 
 						</div>
 				</div >
 			</v-col>
@@ -219,7 +219,7 @@
  
 <script>
 import HeaderMain from '@/components/Home/HeaderMain.vue';
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
 //  import NovelsCards from '@/components/Home/NovelsCards.vue';
  export default {
    name: 'home-view',
@@ -234,7 +234,7 @@ import { mapMutations, mapState } from 'vuex';
    }),
    
   computed: {
-      ...mapState(['novels','status']),
+      ...mapState(['novels','novelsCompleted','novelsPopular','status','statusCompleted','statusPopular']),
       formName(title){
         return title.replaceAll(' ', '-');
       },
@@ -242,32 +242,30 @@ import { mapMutations, mapState } from 'vuex';
 
   mounted : async function() {
       try {
-				await this.$store.dispatch('getNovelsLatest');
-				if(this.status == 'Success Get Novels Latest'){
-					console.log('Good loading novels');
-          
-				}		
+			await Promise.all([
+				this.$store.dispatch('getNovelsLatest'),
+				this.$store.dispatch('getNovelsCompleted'),
+				this.$store.dispatch('getNovelsPopular')
+			]);
+
+			if(this.status == 'Success Get Novels Latest'){
+				console.log('Good loading novels');
+			}
+
+			if(this.statusCompleted == 'Success Get Novels Completed'){
+				console.log('Good loading novels completed');
+			}
+
+			if(this.statusPopular == 'Success Get Novels Popular'){
+				console.log('Good loading novels popular');
+			}
+				
 			} catch (error) {
 				console.error(error);
 			}
     },
     methods: {
-      ...mapMutations(['setPage','setNovels']),
-      async updateData(page) {
-          this.setPage(page);
-          this.setNovels([]);
-          try {
-            await this.$store.dispatch('updateCurrentPage');
-            if(this.status == 'Success Get Novels Latest'){
-              console.log('Good loading novels');
-            }		
-          } catch (error) {
-            console.error(error);
-            setTimeout(() => {
-              this.updateData(page);
-            }, 5000);
-          }
-      }
+     
     }
    
  }

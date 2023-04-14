@@ -20,6 +20,7 @@ export class NovelController{
     private initializeRoutes(){
         this.router.get(this.path,this.getNovelsLatest);
         this.router.get(`${this.path}/completed`,this.getNovelsCompleted);
+        this.router.get(`${this.path}/popular`,this.getNovelsPopular);
         this.router.get(`${this.path}/search/keyword`,this.searchWithKeyword);
         this.router.get(`${this.path}/search/genre`,this.searchWithGenre);
         this.router.get(`${this.path}/novel`,this.getNovelWithUrl);
@@ -73,6 +74,24 @@ export class NovelController{
             console.log(sourceService.baseUrl);
             
             const result = await sourceService.getNovelsCompleted(Number(page));
+            res.status(200).send(result);
+
+        } catch (error) {
+          next(error);
+        }
+    }
+
+    public async getNovelsPopular(req: Request, res: Response,next:NextFunction) {
+
+        const { source } = req.params;
+        const { page=1 } = req.query;
+
+        try {
+          
+            const sourceService = SourcesFactory.createSourceService(source);
+            console.log('Source url : '+sourceService.baseUrl);
+            
+            const result = await sourceService.getNovelsPopular(Number(page));
             res.status(200).send(result);
 
         } catch (error) {

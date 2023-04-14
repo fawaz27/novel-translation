@@ -1,5 +1,5 @@
 <template>
-   <v-app :theme="theme">
+   <v-app :theme="Theme">
 
     
 
@@ -75,7 +75,7 @@
 						<v-icon icon="mdi-bell" size="x-large"></v-icon>
 					</v-badge>
 				</v-btn>
-				<avatar-menu :user="user" :theme="theme"  ></avatar-menu>
+				<avatar-menu :user="user" :Theme="Theme"  ></avatar-menu>
 				<v-app-bar-nav-icon @click="drawer = !drawer" class="icon-nav"></v-app-bar-nav-icon>
 			</v-col>
 		</v-row>
@@ -217,7 +217,7 @@ export default {
     },
   },
   computed:{
-    ...mapState(['user','theme'])
+    ...mapState(['user','Theme'])
   }
 }
 
@@ -321,4 +321,11 @@ export default {
 		}
 		
     }
+
+	@media (min-width: 1920px){
+		.v-container {
+			max-width: 1500px;
+		}
+	}
+		
 </style>

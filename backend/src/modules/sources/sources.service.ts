@@ -13,6 +13,7 @@ interface SourcesService{
     
     getNovelsLatest(page:number): Promise<Novel[]>;
     getNovelsCompleted(page:number): Promise<Novel[]>;
+    getNovelsPopular(page:number): Promise<Novel[]>;
     searchWithKeyword(keyword:string,page:number): Promise<Novel[]>;
     searchWithGenre(genre:string,page:number): Promise<Novel[]>;
     getNovel(novelUrl: string,page:number) : Promise<Novel>;

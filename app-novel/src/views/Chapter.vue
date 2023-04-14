@@ -53,7 +53,22 @@
             
 
         </div>
-        <div class="chapter-content" style="font-size: 20px;">
+
+        <div  v-if="waiting" 
+				class="d-flex align-center  justify-center" 
+				style="width: 100%;height: 150px;" 
+			>
+				<div  >
+					<v-progress-circular
+						:size="100"
+						:width="7"
+						color="light-blue"
+						indeterminate
+					></v-progress-circular>
+				</div>
+				
+		</div>
+        <div v-else class="chapter-content" style="font-size: 20px;">
             <p class="my-4 font-weight-black" >{{ contentChapterCurrent.title }}</p>
             <p class="my-4 "  v-for = "(paragraph,index) in contentChapterCurrent.content" :key="index"> {{ paragraph }}</p>
         </div>
@@ -139,6 +154,7 @@ export default {
     },
 
     data: () => ({
+        waiting: true,
         chapter_test: {
         title_novel: "MMORPG: Rebirth as an Alchemist",
         title_chapter: "1 Ren",
@@ -156,14 +172,16 @@ export default {
     }),
 
     computed:{
-        ...mapState(['contentChapterCurrent','currentNovel'])
+        ...mapState(['contentChapterCurrent','currentNovel','status'])
     },
     mounted (){
         this.getChapterContent();
         window.addEventListener("scroll", this.handleScroll);
+        window.addEventListener("keydown", this.onKeyDown);
     },
     beforeUnmount() {
         window.removeEventListener("scroll", this.handleScroll);
+        window.removeEventListener("keydown", this.onKeyDown);
     },
     methods:{
         ...mapMutations(['setcontentChapter']),
@@ -176,6 +194,7 @@ export default {
                 });
 				if(this.status == 'Success Get Chapter Content'){
 					console.log('Success loading chapter');
+                    this.waiting = false;
                     
 				}		
 			} catch (error) {
@@ -183,6 +202,7 @@ export default {
 			}
         },
         async getNextPrevChapterContent(chapter) {
+            console.log('chpater is : '+chapter);
             try {
 				await this.$store.dispatch('getChapterContent',
                 {
@@ -191,7 +211,7 @@ export default {
                 });
 				if(this.status == 'Success Get Chapter Content'){
 					console.log('Success loading chapter');
-                    
+                    this.waiting = false;
 				}		
 			} catch (error) {
 				console.error(error);
@@ -205,7 +225,7 @@ export default {
                 chapter: this.contentChapterCurrent.name_next_chap
                 }
             });
-            // this.setcontentChapter({});
+            this.waiting = true;
             this.getNextPrevChapterContent(this.contentChapterCurrent.name_next_chap);
         },
         prevChapter() {
@@ -216,7 +236,7 @@ export default {
                 chapter: this.contentChapterCurrent.name_prev_chap
                 }
             });
-            // this.setcontentChapter({});
+            this.waiting = true;
             this.getNextPrevChapterContent(this.contentChapterCurrent.name_prev_chap);
         },
         downloadChapter() {
@@ -254,6 +274,13 @@ export default {
         },
         handleScroll() {
         this.showBackToTopBtn = window.pageYOffset > 100;
+        },
+        onKeyDown(event) {
+            if (event.keyCode === 37) {
+                this.prevChapter();
+            } else if (event.keyCode === 39) {
+                this.nextChapter();
+            }
         }
     }
 

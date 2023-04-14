@@ -81,10 +81,10 @@
               <v-btn
                     rounded
                     variant="text"
-                    :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
+                    :prepend-icon="Theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
                     @click="switchTheme"
               >
-                   {{ theme }}
+                   {{ Theme }}
               </v-btn>
               
             </div>
@@ -118,7 +118,7 @@
             type: Object,
             required: false
         },
-        theme:{
+        Theme:{
             type:String,
             required:true
         }
