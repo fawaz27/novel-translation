@@ -49,7 +49,7 @@ export class AuthentificationController{
         try {
             const created = await this.authService.register(UserData);
             const result = await  this.emailConfirmationService.sendVerificationLink(created.email);
-            response.status(201).send();
+            response.status(201).send(created);
    
         } catch (error) {
            

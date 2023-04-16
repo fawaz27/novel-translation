@@ -53,8 +53,7 @@ export class NovelController{
         try {
           
             const sourceService = SourcesFactory.createSourceService(source);
-            console.log(sourceService.baseUrl);
-            
+
             const result = await sourceService.getNovelsLatest(Number(page));
             res.status(200).send(result);
 
@@ -71,7 +70,7 @@ export class NovelController{
         try {
           
             const sourceService = SourcesFactory.createSourceService(source);
-            console.log(sourceService.baseUrl);
+            console.log('Source url : '+sourceService.baseUrl);
             
             const result = await sourceService.getNovelsCompleted(Number(page));
             res.status(200).send(result);
@@ -107,7 +106,7 @@ export class NovelController{
         try {
           
             const sourceService = SourcesFactory.createSourceService(source);
-            console.log(sourceService.baseUrl); 
+            console.log('Source url : '+sourceService.baseUrl); 
             const result = await sourceService.searchWithKeyword(String(keyword),Number(page));
             res.status(200).send(result);
 
@@ -124,7 +123,7 @@ export class NovelController{
         try {
           
             const sourceService = SourcesFactory.createSourceService(source);
-            console.log(sourceService.baseUrl); 
+            console.log('Source url : '+sourceService.baseUrl); 
             const result = await sourceService.searchWithGenre(String(genre),Number(page));
             res.status(200).send(result);
 
@@ -141,7 +140,7 @@ export class NovelController{
         try {
           
             const sourceService = SourcesFactory.createSourceService(source);
-            console.log(sourceService.baseUrl); 
+            console.log('Source url : '+sourceService.baseUrl); 
             const result = await sourceService.getNovel(String(url),Number(page));
             res.status(200).send(result);
 
@@ -158,7 +157,7 @@ export class NovelController{
         try {
           
             const sourceService = SourcesFactory.createSourceService(source);
-            console.log(sourceService.baseUrl); 
+            console.log('Source url : '+sourceService.baseUrl); 
             const result = await sourceService.getContentChapter(String(url));
             res.status(200).send(result);
 

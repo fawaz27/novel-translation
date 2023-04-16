@@ -20,7 +20,7 @@
                       <v-btn class="mx-2"  icon color="red">
                         <v-icon  size="45">mdi-google-plus</v-icon>
                       </v-btn>
-                      <v-btn class="mx-2"  icon color="light-blue">
+                      <v-btn class="mx-2"  icon color="blue-darken-2">
                         <v-icon  size="45">mdi-linkedin</v-icon>
                       </v-btn>
                     </div>
@@ -46,7 +46,7 @@
                         name="Email"
                         append-inner-icon="mdi-email"
                         type="text"
-                        color="light-blue"
+                        color="blue-darken-2"
                         v-model="body.login"
                       />
 
@@ -56,7 +56,7 @@
                         name="password"
                         append-inner-icon="mdi-lock"
                         type="password"
-                        color="light-blue"
+                        color="blue-darken-2"
                         v-model="body.password"
                       />
                     </v-form>
@@ -66,12 +66,12 @@
                       <a v-on:click="$router.push('/register')" class="custom-link">Don't have an account?</a> 
                       
                     </h3>
-					<div class="text-center mt-4">
-						<v-progress-circular v-if="loading" color="light-blue" indeterminate />
-					</div>
+					<!-- <div class="text-center mt-4">
+						<v-progress-circular v-if="loading" color="blue-darken-2" indeterminate />
+					</div> -->
                   </v-card-text>
                   <div class="text-center my-4">
-                    <v-btn rounded color="light-blue" v-on:click="signIn" dark v-bind:disabled="!formIsValid">SIGN IN</v-btn>
+                    <v-btn rounded color="blue-darken-2" v-on:click="signIn" :disabled="!loading && !formIsValid" :loading="loading " dark >SIGN IN</v-btn>
                   </div>
                 </v-col>
                 

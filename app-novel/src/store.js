@@ -194,7 +194,8 @@ export default createStore({
                     commit('setStatus','Failure')
                 }
             } catch (error) {
-              console.error(error);
+                console.error(error);
+                commit('setStatus','Failure')
             }            
         },
         signUp : async ({commit},userInfos)=>{
@@ -210,6 +211,7 @@ export default createStore({
               
             } catch (error) {
                 console.error(error);
+                commit('setStatus','Failure')
             }
 
         },
@@ -226,7 +228,8 @@ export default createStore({
                         commit('setStatus','Failure')
                     }
                 } catch (error) {
-                console.error(error);
+                    console.error(error);
+                    commit('setStatus','Failure')
                 }  
             }
               
@@ -246,6 +249,7 @@ export default createStore({
               
             } catch (error) {
                 console.error(error);
+                commit('setStatus','Failure')
             }
         },
         getNovelsCompleted : async ({commit,state})=>{
@@ -263,6 +267,7 @@ export default createStore({
               
             } catch (error) {
                 console.error(error);
+                commit('setStatus','Failure')
             }
         },
         getNovelsPopular : async ({commit,state})=>{
@@ -280,6 +285,7 @@ export default createStore({
               
             } catch (error) {
                 console.error(error);
+                commit('setStatus','Failure')
             }
         },
         getNovel : async ({commit,state},params)=>{
@@ -294,10 +300,12 @@ export default createStore({
                 }
                 else {
                     commit('setStatus','Failure');
+                    
                 }
               
             } catch (error) {
                 console.error(error);
+                commit('setStatus','Failure')
             }
         },
         getListChapterNovel : async ({commit,state},params)=>{
@@ -316,6 +324,7 @@ export default createStore({
               
             } catch (error) {
                 console.error(error);
+                commit('setStatus','Failure')
             }
         },
         getChapterContent : async ({commit,state},params)=>{
@@ -331,6 +340,7 @@ export default createStore({
                 }
             } catch (error) {
                 console.error(error);
+                commit('setStatus','Failure')
             }
         },
         updateCurrentPage : async ({commit,state})=>{
@@ -348,6 +358,7 @@ export default createStore({
               
             } catch (error) {
                 console.error(error);
+                commit('setStatus','Failure')
             }
         },
         nextChapter : async ({commit,state})=>{
@@ -363,6 +374,7 @@ export default createStore({
               
             } catch (error) {
                 console.error(error);
+                commit('setStatus','Failure')
             }
         }
     }

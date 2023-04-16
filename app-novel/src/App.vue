@@ -3,7 +3,7 @@
 
     
 
-    <v-app-bar  app absolute>
+    <v-app-bar  app >
 		<v-row no-gutters v-if="!search">
 			<v-col cols="4" md="6" class="d-flex justify-start">
 				<v-img class="logo"
@@ -16,7 +16,7 @@
 					<v-menu :location="location"  >
 					<template v-slot:activator="{ props }">
 						<v-btn
-						class="text-capitalize text-h5"
+						class="text-capitalize text-h6"
 						dark
 						v-bind="props"
 						prepend-icon="mdi-view-list"
@@ -27,18 +27,21 @@
 					</template>
 
 					<v-list>
-						<v-list-item
-						v-for="(item, index) in items"
-						:key="index"
+						<v-list-item 
+							v-for="(novel,index) in novelsList" 
+							:key="index" :prepend-icon="novel.icon" 
+							:title="novel.title"
+							:value="novel.value" 
+							style="font-size: 18px;"
+							active-color="blue-darken-2"
 						>
-						<v-list-item-title>{{ item.title }}</v-list-item-title>
 						</v-list-item>
 					</v-list>
 					</v-menu >
 					<v-menu :location="location"  >
 						<template v-slot:activator="{ props }">
 							<v-btn
-							class="text-capitalize text-h5"
+							class="text-capitalize text-h6"
 							dark
 							v-bind="props"
 							prepend-icon="mdi-view-list"
@@ -49,11 +52,13 @@
 						</template>
 
 						<v-list>
-							<v-list-item
-							v-for="(item, index) in items"
-							:key="index"
+							<v-list-item 
+								v-for="(genre,index) in genresList" 
+								:key="index" 
+								:title="genre.title"
+								:value="genre.value" 
+								style="font-size: 18px;"
 							>
-							<v-list-item-title>{{ item.title }}</v-list-item-title>
 							</v-list-item>
 						</v-list>
 					</v-menu> 
@@ -88,76 +93,64 @@
 					</v-btn>
 			</v-col>
 			
-		</v-row>					
+		</v-row>
+		
+		
+		
     </v-app-bar>
 
-	
 	<v-navigation-drawer
+		v-if="this.$vuetify.display.width <=961"
+		v-model="drawer"
+		fixed
+		temporary
+		style="font-size: 20px; width: 300px;"
+    >
 	
-	v-model="drawer"
-	fixed
-	temporary
-	style="top: 0px;"
-    >
+	<v-list nav class="mt-4" >
 
-
-
-	<v-list
-        :lines="false"
-        density="compact"
-        nav
-		style="top: 100px;"
-    >
-		<v-menu :location="location"  >
+		<v-list-group  value="Novels">
 			<template v-slot:activator="{ props }">
-				<v-btn
-				class="text-capitalize text-h5"
-				dark
+				<v-list-item
 				v-bind="props"
 				prepend-icon="mdi-view-list"
-				append-icon="mdi-menu-down"
-				>
-				Novel List
-				</v-btn>
+				title="Novel List"
+				></v-list-item>
 			</template>
-
-			<v-list>
-				<v-list-item
-				v-for="(item, index) in items"
-				:key="index"
-				>
-				<v-list-item-title>{{ item.title }}</v-list-item-title>
-				</v-list-item>
-			</v-list>
-			</v-menu >
-			<v-menu :location="location"  >
-				<template v-slot:activator="{ props }">
-					<v-btn
-					class="text-capitalize text-h5"
-					dark
-					v-bind="props"
-					prepend-icon="mdi-view-list"
-					append-icon="mdi-menu-down"
-					>
-					Genres
-					</v-btn>
-				</template>
-
-				<v-list>
-					<v-list-item
-					v-for="(item, index) in items"
-					:key="index"
-					>
-					<v-list-item-title>{{ item.title }}</v-list-item-title>
-					</v-list-item>
-				</v-list>
-			</v-menu> 
-
-	</v-list>
-		
+			<v-list-item 
+				v-for="(novel,index) in novelsList" 
+				:key="index" :prepend-icon="novel.icon" 
+				:title="novel.title"
+				:value="novel.value" 
+				style="font-size: 18px;"
+				active-color="blue-darken-2"
+			>
+			</v-list-item>
 			
-    </v-navigation-drawer>
+			
+		</v-list-group>  
+        <v-list-group value="Genres">
+			<template v-slot:activator="{ props }">
+				<v-list-item
+				v-bind="props"
+				prepend-icon="mdi-view-list"
+				title="Genres"
+				></v-list-item>
+			</template>
+			<v-list-item 
+				v-for="(genre,index) in genresList" 
+				:key="index" :prepend-icon="genre.icon" 
+				:title="genre.title"
+				:value="genre.value" 
+				style="font-size: 18px;"
+			>
+			</v-list-item>
+		</v-list-group>   
+    </v-list>
     
+    </v-navigation-drawer>
+	
+	
     <v-main>
 			<router-view />
     </v-main>
@@ -200,10 +193,20 @@ export default {
         { title: 'Click Me' },
         { title: 'Click Me 2' },
       ],
+	novelsList: [
+	{ icon:"mdi-book-sync-outline" ,title: 'Latest Release', value:'latest' },
+	{ icon:"mdi-book-check-outline" ,title: 'Completed' , value:'completed' },
+	{ icon:"mdi-book-arrow-up-outline" ,title: 'Most popular', value:'popular' },
+	],
+	genresList :[
+	{ title: 'Action', value:'action' },
+	{ title: 'Romance' , value:'romance' },
+	{ title: 'Wuxia', value:'wuxia' },
+	],
     // scrolled: false
   }),
   mounted() {
-
+	console.log(this.$vuetify.display.width <=961);
   },
   methods: {
 	searchAction(){
@@ -214,7 +217,7 @@ export default {
     },
     clear() {
         this.searchText = '';
-    },
+    }
   },
   computed:{
     ...mapState(['user','Theme'])
@@ -225,7 +228,16 @@ export default {
 
 <style scoped>
     
-   
+
+	/* .v-list-item--nav .v-list-item-title{
+		font-size: 1.2rem;
+		font-weight: 400;
+		line-height: 3rem;
+	} */
+	i{
+		
+		margin-inline-end: 12px;
+	}
    .logo{
 		cursor: pointer;
    }
@@ -263,6 +275,7 @@ export default {
 		margin-left: 0px;
 		max-width: 70%;
 	}
+	
 	@media screen and (max-width:960px) {
         
         .v-text-field{
@@ -279,6 +292,7 @@ export default {
 		.icon-nav{
 			display: block;
 		}
+		
     }
 
 	@media screen and (max-width:800px) {

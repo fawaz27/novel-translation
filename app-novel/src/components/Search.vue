@@ -4,7 +4,7 @@
     <v-text-field
         
         :class="classe"
-        color="light-blue"  
+        color="blue-darken-2"  
         prepend-inner-icon="mdi-magnify"
         clearable
         :="searchText"

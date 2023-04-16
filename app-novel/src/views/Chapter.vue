@@ -15,7 +15,7 @@
         <div class="chapter-buttons d-flex justify-center  my-4" style="gap: 1rem">
 
             <v-btn
-            color="light-blue-accent-2 "
+            color="blue-darken-2 "
             prepend-icon = "mdi-arrow-left"
             @click="prevChapter"
             v-bind:disabled="!(contentChapterCurrent.prevUrl!=undefined)" 
@@ -28,7 +28,7 @@
             </v-btn>
 
             <v-btn
-            color="light-blue-accent-2 "
+            color="blue-darken-2 "
             prepend-icon = "mdi-home"
             @click="$router.push({ name: 'novel', params:{name: this.$route.params.name } })"
             >
@@ -39,7 +39,7 @@
             </span> 
             </v-btn>
             <v-btn
-            color="light-blue-accent-2"
+            color="blue-darken-2"
             append-icon ="mdi-arrow-right"
             @click="nextChapter"
             v-bind:disabled="!(contentChapterCurrent.nextUrl!=undefined)"
@@ -62,7 +62,7 @@
 					<v-progress-circular
 						:size="100"
 						:width="7"
-						color="light-blue"
+						color="blue-darken-2"
 						indeterminate
 					></v-progress-circular>
 				</div>
@@ -78,7 +78,7 @@
         <div class="chapter-buttons d-flex justify-center  my-6" style="gap: 1rem">
 
             <v-btn
-                color="light-blue-accent-2 "
+                color="blue-darken-2 "
                 prepend-icon = "mdi-arrow-left"
                 @click="prevChapter"
                 v-bind:disabled="!(contentChapterCurrent.prevUrl!=undefined)" 
@@ -91,7 +91,7 @@
             </v-btn>
 
             <v-btn
-                color="light-blue-accent-2 "
+                color="blue-darken-2 "
                 prepend-icon = "mdi-home"
                 @click="$router.push({ name: 'novel', params:{name: this.$route.params.name } })"
             >
@@ -102,7 +102,7 @@
             </span> 
             </v-btn>
             <v-btn
-                color="light-blue-accent-2"
+                color="blue-darken-2"
                 append-icon ="mdi-arrow-right"
                 @click="nextChapter"
                 v-bind:disabled="!(contentChapterCurrent.nextUrl!=undefined)"
@@ -121,7 +121,7 @@
     
         <v-btn 
                 v-show="showBackToTopBtn"
-                color="light-blue-accent-4"
+                color="blue-darken-4"
                 icon="mdi-chevron-up"
                 @click="scrollToTop"
                 class="btn-top"

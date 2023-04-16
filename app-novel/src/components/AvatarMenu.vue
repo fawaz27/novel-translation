@@ -9,7 +9,7 @@
             v-bind="props"
           >
             <v-avatar
-				color="light-blue"
+				color="blue-darken-2"
 				size="45"
             >
               <span v-if="user.id>0" class="text-h5">{{getInitials()}}</span>
@@ -24,7 +24,7 @@
 
               <div v-if="user.id>0">
                 <v-avatar
-                    color="light-blue"
+                    color="blue-darken-2"
                 >
                     <span class="text-h5">{{getInitials()}}</span>
                 </v-avatar>

@@ -20,7 +20,7 @@
                       <v-btn class="mx-2"  icon color="red">
                         <v-icon  size="45">mdi-google-plus</v-icon>
                       </v-btn>
-                      <v-btn class="mx-2"  icon color="light-blue">
+                      <v-btn class="mx-2"  icon color="blue-darken-2">
                         <v-icon  size="45">mdi-linkedin</v-icon>
                       </v-btn>
                     </div>
@@ -33,7 +33,7 @@
                         name="Email"
                         append-inner-icon="mdi-email"
                         type="email"
-                        color="light-blue"
+                        color="blue-darken-2"
 						v-model="body.email"
                       />
 						<v-text-field
@@ -41,7 +41,7 @@
                         name="Username"
                         append-inner-icon="mdi-account"
                         type="text"
-                        color="light-blue"
+                        color="blue-darken-2"
 						v-model="body.username"
                       />
 
@@ -51,7 +51,7 @@
                         name="password"
                         append-inner-icon="mdi-lock"
                         type="password"
-                        color="light-blue"
+                        color="blue-darken-2"
 						v-model="body.password"
                       />
                       <v-text-field
@@ -60,7 +60,7 @@
                         name="Confirmpassword"
                         append-inner-icon="mdi-lock"
                         type="password"
-                        color="light-blue"
+                        color="blue-darken-2"
 						v-model="repassword"
                       />
                     </v-form>
@@ -69,12 +69,12 @@
                     <h3 class="text-center mt-4"> 
 						<a v-on:click="$router.push('/login')" class="custom-link">Already have an account?</a> 	
 					</h3>
-                    <div class="text-center mt-4">
-						<v-progress-circular v-if="loading" color="light-blue" indeterminate />
-					</div>
+                    <!-- <div class="text-center mt-4">
+						<v-progress-circular v-if="loading" color="blue-darken-2" indeterminate />
+					</div> -->
                   </v-card-text>
                   <div class="text-center my-4">
-                    <v-btn rounded color="light-blue" v-on:click="signUp" dark v-bind:disabled="!formIsValid">SIGN UP</v-btn>
+                    <v-btn rounded color="blue-darken-2" v-on:click="signUp" dark :disabled="!loading && !formIsValid" :loading="loading ">SIGN UP</v-btn>
                   </div>
                 </v-col>
                 

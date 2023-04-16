@@ -6,7 +6,7 @@
           <v-progress-circular
             :size="70"
             :width="7"
-            color="light-blue"
+            color="blue-darken-2"
             indeterminate
           ></v-progress-circular>
       </div>

@@ -22,7 +22,7 @@
 					<v-progress-circular
 						:size="100"
 						:width="7"
-						color="light-blue"
+						color="blue-darken-2"
 						indeterminate
 					></v-progress-circular>
 				</div>
@@ -92,7 +92,7 @@
 					<v-progress-circular
 						:size="100"
 						:width="7"
-						color="light-blue"
+						color="blue-darken-2"
 						indeterminate
 					></v-progress-circular>
 				</div>
@@ -163,7 +163,7 @@
 					<v-progress-circular
 						:size="100"
 						:width="7"
-						color="light-blue"
+						color="blue-darken-2"
 						indeterminate
 					></v-progress-circular>
 				</div>

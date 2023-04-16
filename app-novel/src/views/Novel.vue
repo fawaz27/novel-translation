@@ -12,11 +12,9 @@
                             <v-card class="card" >
                                 <v-img
                                     :src="currentNovel.coverImageUrl"
-                                    class="bg-white image"
+                                    class="bg-white fill-height fill-width"
                                     lazy-src="https://picsum.photos/id/11/100/60"
-                                    cover
-                                    
-                                >
+                                    cover                               >
                                     <template v-slot:placeholder>
                                     <div class="d-flex align-center justify-center fill-height">
                                         <v-progress-circular
@@ -33,7 +31,7 @@
                                 class="mt-4" 
                                 v-model="progress"
                                 height="25"
-                                color="light-blue-accent-2"
+                                color="blue-darken-2"
                                 v-if="showProgress"
                                 
                             >
@@ -47,7 +45,7 @@
                     class="container"
                     >
                         <div class="mt-4  raiting-two text-center ">
-                            <div class="d-flex align-center flex-wrap ml-16">
+                            <div class="d-flex justify-center flex-wrap ">
                                 <v-rating
                                 v-model="rating"
                                 hover
@@ -122,34 +120,96 @@
                         </div>
                         <div class="buttons">
                             <v-btn
-                            class="btns-item"
+                            class="btns-item text-capitalize text-h6"
                             rounded="pill"
-                            color="light-blue"
+                            color="blue-darken-2"
+                            prepend-icon="mdi-eye"
+                            @click="$router.push({ 
+                                    name: 'chapter', 
+                                    params:{
+                                        name: this.$route.params.name, 
+                                        chapter: chapters_one[0].title
+                                    }})"
                             >
                             Read
                             </v-btn>
 
                             <v-btn
                             rounded="pill"
-                            class="btns-item"
-                            color="light-blue"
-                            prepend-icon="mdi-plus"
+                            class="btns-item text-capitalize text-h6"
+                            color="blue-darken-2"
+                            prepend-icon="mdi-bookmark"
                             >
-                            Add To Library
+                            Follow
                             </v-btn>
                             
                             <v-btn
+                            v-if="!multipleDownload"
                             ref="downloadBtn"
-                            class="btns-item"
+                            class="btns-item text-capitalize text-h6"
                             rounded="pill"
-                            color="light-blue"
+                            color="blue-darken-2"
                             prepend-icon="mdi-download"
                             @click="startDownload"
                             >
                             Download
                             </v-btn>
 
+                            <v-btn
+                            v-else
+                            ref="downloadBtnMulti"
+                            class="btns-item text-capitalize text-h6"
+                            rounded="pill"
+                            color="blue-darken-2"
+                            prepend-icon="mdi-download-multiple"
+                            @click="startDownload"
+                            >
+                            Download Selected
+                            </v-btn>
+
                             
+                        </div>
+
+                        <div class="buttons-hidden">
+                            <v-btn
+                            class="btns-item text-capitalize text-h6"
+                            rounded="pill"
+                            color="blue-darken-2"
+                            icon="mdi-eye"
+                            @click="$router.push({ 
+                                    name: 'chapter', 
+                                    params:{
+                                        name: this.$route.params.name, 
+                                        chapter: chapters_one[0].title
+                                    }})"
+                            ></v-btn>
+
+                            <v-btn
+                            rounded="pill"
+                            class="btns-item text-capitalize text-h6"
+                            color="blue-darken-2"
+                            icon="mdi-bookmark"
+                            ></v-btn>
+                            
+                            <v-btn 
+                            v-if="!multipleDownload"
+                            ref="downloadBtn"
+                            class="btns-item text-capitalize text-h6"
+                            rounded="pill"
+                            color="blue-darken-2"
+                            icon="mdi-download"
+                            @click="startDownload"
+                            ></v-btn>
+
+                            <v-btn
+                            v-else
+                            ref="downloadBtn"
+                            class="btns-item text-capitalize text-h6"
+                            rounded="pill"
+                            color="blue-darken-2"
+                            icon="mdi-download-multiple"
+                            @click="startDownload"
+                            ></v-btn>                  
                         </div>
 
                     </v-col>
@@ -196,7 +256,38 @@
                                     <p style="font-size: 20px;" v-html="formattedText"></p>
                                 </div>
                                 
-                            
+                                <v-divider></v-divider>
+                                <div class="text-h5 my-5">Comments ({{ comments.length }})</div>
+                                
+                                <v-card-title>Leave a comment</v-card-title>
+                               
+                                  
+                                        <v-row>
+                                            <v-col cols="1" class="d-flex align-center justify-center " >
+                                            <v-avatar size="50">
+                                                <v-img :src="avatar" ></v-img>
+                                            </v-avatar>
+                                            </v-col>
+                                            <v-col cols="11">
+                                            <v-textarea  rows="1" v-model="comment" variant="underlined" auto-grow  shaped row-height="10"></v-textarea>
+                                            </v-col>
+                                        </v-row>
+                                        <div class="d-flex justify-end mb-4">
+                                            <v-btn color="blue-darken-2" rounded="xl" @click="submitComment">Comment</v-btn>
+                                        </div>
+                                
+                                <v-row v-for="(comment, index) in comments" :key="index">
+                                            <v-col cols="1" class="d-flex align-center justify-center " >
+                                                <v-avatar size="50">
+                                                    <v-img :src="avatar" ></v-img>
+                                                </v-avatar>
+                                            </v-col>
+                                            <v-col cols="11">
+                                                <span class="mr-2"> {{ comment.author}}</span>
+                                                <span> {{ comment.date }}</span>
+                                                <p>{{ comment.content }}</p>
+                                            </v-col>
+                                </v-row>
                         </v-container>
                     </v-window-item>
 
@@ -206,13 +297,13 @@
                                 <v-progress-circular
                                     :size="70"
                                     :width="7"
-                                    color="light-blue"
+                                    color="blue-darken-2"
                                     indeterminate
                                 ></v-progress-circular>
                             </div>
                             <div v-else>
                                 
-                                <div class="d-flex justify-start">
+                                <div class="d-flex justify-start  ml-4" style="height: 40px;">
                                     <v-checkbox  v-model="selectedAll"  label="Check all" @change="toogleSelectedAll"  > </v-checkbox>
                                 </div>
                                     
@@ -399,7 +490,14 @@ export default {
         formattedText: '',
         show:false,
         selectedAll:false,
-        chaptersConcat:[]
+        chaptersConcat:[],
+        avatar: "https://picsum.photos/40/40",
+        comment: "",
+        comments: [
+            { author: "John", date: "2022-04-12", content: "Great book!" },
+            { author: "Jane", date: "2022-04-10", content: "I loved it!" }
+        ],
+        multipleDownload:false
         
     }),
     async created(){
@@ -581,6 +679,22 @@ export default {
                 item.selected = this.selectedAll;
             });
 
+        },
+        submitComment(){
+            if(this.comment){
+                this.comments.unshift({
+                    author: "Jean",
+                    date:   this.formatDate(new Date()) ,
+                    content: this.comment
+                })
+            }
+        },
+        formatDate(date){
+            const year = date.getFullYear();
+            const month = ('0' + (date.getMonth() + 1)).slice(-2);
+            const day = ('0' + date.getDate()).slice(-2);
+
+            return `${year}-${month}-${day}`;
         }
   },
 
@@ -588,6 +702,11 @@ export default {
     chaptersConcat: {
       handler() {
         this.selectedAll = this.chaptersConcat.every((item) => item.selected);
+        if ( this.chaptersConcat.find(item => item.selected) ) {
+            this.multipleDownload = true;
+        } else {
+            this.multipleDownload = false;
+        }
       },
       deep: true,
     }
@@ -601,7 +720,7 @@ export default {
 
     .card {
     height: 412px;
-    width: 308px;
+    width: 280px;
     }
     .image{
         height: 412px;
@@ -668,9 +787,14 @@ export default {
     }
 
     .row{
-        max-width: 90%; 
+        /* max-width: 90%;  */
         max-height: 50px;
         
+    }
+
+
+    .buttons-hidden{
+        display: none;
     }
 
 
@@ -686,7 +810,7 @@ export default {
             max-width: 800px;
         }
         .card{
-           width: 250px;
+           width: 205px;
            height: 300px;
            margin-top: 20px;
         }
@@ -708,27 +832,41 @@ export default {
 
     }
 
-    @media (min-width: 700px) and (max-width: 960px) {
+    @media (min-width: 720px) and (max-width: 960px) {
         
        .center{
         display: flex;
         justify-content: center;
        }
+
+       .g_wrap{
+            max-width: 95%;
+        }
         
     }
 
-    @media (max-width: 880px) {
-        .g_wrap{
-            max-width: 500px;
+    @media (max-width: 720px) {
+
+        .buttons{
+            display: none;
         }
-        .card{
+
+        .buttons-hidden{
+            display: flex;
+            justify-content: center;
+        }
+
+         .g_wrap{
+            max-width: 90%;
+        }
+        /*.card{
           
            height: 200px;
            margin-top: 45px;
         }
         .image{
             height: 200px;
-        }
+        } */
 
         .text-h4{
 
@@ -736,9 +874,9 @@ export default {
             line-height: 1.5rem;
             margin-top: 40px;
         }
-        .novel-infos{   
+        /* .novel-infos{   
             height: 440px;
-        }
+        } */
     }
 
     @media (max-width: 600px) {
@@ -747,7 +885,7 @@ export default {
 
         .card{
           
-          width: 200px;
+          width: 170px;
           height: 250px;
        }
        .image{
@@ -755,13 +893,13 @@ export default {
         }
 
         .novel-infos{   
-            height: 800px;
+            height: 700px;
         }
 
         .container{
             margin-left: auto;
             margin-right: auto;
-            max-width: 350px;
+            /* max-width: 350px; */
         }
         .raiting-two{
             display: block;
