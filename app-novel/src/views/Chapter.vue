@@ -202,7 +202,6 @@ export default {
 			}
         },
         async getNextPrevChapterContent(chapter) {
-            console.log('chpater is : '+chapter);
             try {
 				await this.$store.dispatch('getChapterContent',
                 {

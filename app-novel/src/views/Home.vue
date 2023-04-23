@@ -5,211 +5,10 @@
         <!-- <novels-cards></novels-cards> -->
         <v-row>
 
-			<v-col
-				
-				class="mt-1 d-flex justify-space-between "
-				cols="12"
-				style="border-bottom: 1px solid #ccc; margin-bottom: 10px; "	
-				>
-				<span class="text-h4">Most Popular</span >
-				<span class="text-h5 title" style="color: #4179E2;" >See More</span >
-			</v-col>
-			<div v-if="novelsPopular.length==0" 
-				class="d-flex align-center  justify-center" 
-				style="width: 100%;height: 150px;" 
-			>
-				<div  >
-					<v-progress-circular
-						:size="100"
-						:width="7"
-						color="blue-darken-2"
-						indeterminate
-					></v-progress-circular>
-				</div>
-				
-			</div>
-			<v-sheet v-else
-				class="mx-auto"
-				max-width="100%"
-			>
-				<v-slide-group
-				show-arrows
-				>
-					<v-slide-group-item
-						v-for="(novel,index) in novelsPopular"  :key="index"
-						
-					>
-						
-					<div align-center class="mx-2">
-						<v-card height="250" width="170" class="card" 
-							:to="{name:'novel',params:{name:novel.title}}">
-								<v-img
-									:src="novel.coverImageUrl"
-									class="bg-white image"
-									height="250"
-									lazy-src="https://picsum.photos/id/11/100/60"
-									cover
-									
-								>
-									<template v-slot:placeholder>
-									<div class="d-flex align-center justify-center fill-height">
-										<v-progress-circular
-										color="grey-lighten-4"
-										indeterminate
-										></v-progress-circular>
-									</div>
-									</template>
-								</v-img>
-						</v-card> 
-						<div 
-							class="text-truncate font-weight-bold title text-capitalize" 
-							@click="$router.push({ name: 'novel', params:{name: novel.title } })"
-						
-							>
-							<span :title="novel.title.replaceAll('-', ' ')">{{  novel.title.replaceAll('-', ' ') }}</span> 
-						</div>
-					</div>
-				
-					
-					</v-slide-group-item>
-				</v-slide-group>
-			</v-sheet>	
-
-			<v-col
-             
-              class="mt-1 d-flex justify-space-between"
-              cols="12"
-				style="border-bottom: 1px solid #ccc; margin-bottom: 10px;"
-            >
-				<span class="text-h4">Latest Release </span >
-				<span class="text-h5 title" style="color: #4179E2;" >See More</span >
-            </v-col>
-			<div v-if="novels.length==0" 
-				class="d-flex align-center  justify-center" 
-				style="width: 100%;height: 150px;" 
-			>
-				<div  >
-					<v-progress-circular
-						:size="100"
-						:width="7"
-						color="blue-darken-2"
-						indeterminate
-					></v-progress-circular>
-				</div>
-				
-			</div>
-			<v-sheet v-else
-				class="mx-auto"
-				max-width="100%"
-			>
-				<v-slide-group
-				show-arrows
-				>
-					<v-slide-group-item
-						v-for="(novel,index) in novels"  :key="index"
-						
-					>
-						
-					<div align-center class="mx-2">
-						<v-card height="250" width="170" class="card" 
-							:to="{name:'novel',params:{name:novel.title}}">
-								<v-img
-									:src="novel.coverImageUrl"
-									class="bg-white image"
-									height="250"
-									lazy-src="https://picsum.photos/id/11/100/60"
-									cover
-									
-								>
-									<template v-slot:placeholder>
-									<div class="d-flex align-center justify-center fill-height">
-										<v-progress-circular
-										color="grey-lighten-4"
-										indeterminate
-										></v-progress-circular>
-									</div>
-									</template>
-								</v-img>
-						</v-card> 
-						<div 
-							class="text-truncate font-weight-bold title text-capitalize" 
-							@click="$router.push({ name: 'novel', params:{name: novel.title } })"
-						
-							>
-							<span :title="novel.title.replaceAll('-', ' ')">{{  novel.title.replaceAll('-', ' ') }}</span> 
-						</div>
-					</div>
-				
-					
-					</v-slide-group-item>
-				</v-slide-group>
-			</v-sheet>
-
-			<v-col
-             
-              class="mt-1 d-flex justify-space-between"
-              cols="12"
-				style="border-bottom: 1px solid #ccc;"           
-			>
-				<span class="text-h4" >Novels Completed</span >
-				<span class="text-h5 title" style="color: #4179E2;" >See More</span >
-            </v-col>
-
-			<div v-if="novelsCompleted.length==0" 
-				class="d-flex align-center  justify-center" 
-				style="width: 100%;height: 150px;" 
-			>
-				<div  >
-					<v-progress-circular
-						:size="100"
-						:width="7"
-						color="blue-darken-2"
-						indeterminate
-					></v-progress-circular>
-				</div>
-				
-			</div>
-
-			<v-col
-			v-for="(novel,index) in novelsCompleted.slice(0, 16)"  :key="index"
-			cols="6" sm = "3"
-			md="2"
-			xl="1"
+			<slide-card :novels="novelsPopular" title="Most Popular" value="popular"></slide-card>
+			<slide-card :novels="novels" title="Latest Release" value="latest"></slide-card>
+            <novels-cards :novels="novelsCompleted" title="Novel Completed" value="completed"></novels-cards>
 			
-			>
-				<div class="d-flex justify-center">
-				<v-card height="250" width="170" class="card" 
-					:to="{name:'novel',params:{name:novel.title}}">
-						<v-img
-							:src="novel.coverImageUrl"
-							class="bg-white image"
-							height="250"
-							lazy-src="https://picsum.photos/id/11/100/60"
-							cover
-							
-						>
-							<template v-slot:placeholder>
-							<div class="d-flex align-center justify-center fill-height">
-								<v-progress-circular
-								color="grey-lighten-4"
-								indeterminate
-								></v-progress-circular>
-							</div>
-							</template>
-						</v-img>
-				</v-card> 
-				</div>
-				
-				<div class="d-flex justify-center"  >
-						<div 
-						class="text-truncate font-weight-bold title text-capitalize" 
-						@click="$router.push({ name: 'novel', params:{name: novel.title } })"
-					
-						>
-						<span :title="novel.title.replaceAll('-', ' ')">{{  novel.title.replaceAll('-', ' ') }}</span> 
-						</div>
-				</div >
-			</v-col>
 			
 			
         </v-row>
@@ -219,14 +18,17 @@
  
 <script>
 import HeaderMain from '@/components/Home/HeaderMain.vue';
+import SlideCard from '@/components/Home/SlideCard.vue';
 import { mapState } from 'vuex';
+import NovelsCards from '../components/Home/NovelsCards.vue';
 //  import NovelsCards from '@/components/Home/NovelsCards.vue';
  export default {
    name: 'home-view',
  
    components: {
       HeaderMain,
-      // NovelsCards
+      SlideCard,
+      NovelsCards
    },
  
    data: () => ({

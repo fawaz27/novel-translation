@@ -18,11 +18,11 @@ export class NovelController{
     }
 
     private initializeRoutes(){
-        this.router.get(this.path,this.getNovelsLatest);
-        this.router.get(`${this.path}/completed`,this.getNovelsCompleted);
-        this.router.get(`${this.path}/popular`,this.getNovelsPopular);
+        this.router.get(`${this.path}/novel-list/latest`,this.getNovelsLatest);
+        this.router.get(`${this.path}/novel-list/completed`,this.getNovelsCompleted);
+        this.router.get(`${this.path}/novel-list/popular`,this.getNovelsPopular);
         this.router.get(`${this.path}/search/keyword`,this.searchWithKeyword);
-        this.router.get(`${this.path}/search/genre`,this.searchWithGenre);
+        this.router.get(`${this.path}/genre-list`,this.searchWithGenre);
         this.router.get(`${this.path}/novel`,this.getNovelWithUrl);
         this.router.get(`${this.path}/chapter`,this.getChapterContent);
         // this.router

@@ -1,9 +1,10 @@
-import { load } from "cheerio";
+import { Cheerio, load } from "cheerio";
 import Chapter from "../../interfaces/chapter.interface";
 import Content from "../../interfaces/content.interface";
 import { HttpLibrary } from "../../interfaces/httpLibrary.interface";
 import Novel from "../../interfaces/novel.interface";
 import SourcesService from "./sources.service";
+import NovelsList from "../../interfaces/novelsList.interface";
 
 
 export class NovelFullService implements SourcesService{
@@ -18,35 +19,32 @@ export class NovelFullService implements SourcesService{
         this.http = http; 
              
     }
-    private async matchImg(data:Novel[]) : Promise<Novel[]>{
 
-            let result: Novel [] = [];
-            // for (const it of data) {
-            //     const image  = await this.getImg(it.link);      
-            //     console.log(image);
-                
-            //     result.push({title:it.title,link:it.link,chapter:it.chapter, image: `${this.baseUrl}${image}` });
-            // }
+    private async matchOthersParams(data:Novel[]) : Promise<Novel[]>{
 
-            await Promise.all(data.map(async (it) => {
-                const image  = await this.getImg(it.url);      
-                it.coverImageUrl = `${this.baseUrl}${image}`;
-                // result.push({title:it.title,url:it.url, coverImageUrl: `${this.baseUrl}${image}` });
-            }));
-            console.log(data[0]);
+        let result: Novel [] = [];
 
-            return data;
+        await Promise.all(data.map(async (it) => {
+            const infos  = await this.getInfos(it.url); 
+            const image  = infos.find('img').attr('src') as string;
+            const status = ((infos.find('.info')).find('div').eq(4)).find('a').text(); 
+
+            it.status = status; 
+            it.coverImageUrl = `${this.baseUrl}${image}`;
+        }));
+        console.log(data[0]);
+
+        return data;
     }
 
-    private async getImg(link:string|undefined) :Promise<string>{
+    private async getInfos(link:string|undefined) :Promise<any>{
 
 
         try {
         const response = await this.http.get(`${this.baseUrl}${link}`, this.http.headers);
             const $ = load(response.data);
             const infos = $('.col-info-desc');    
-            const img = infos.find('img').attr('src') as string;
-            return img; 
+            return infos;
         } catch (error) {
             console.error(`Error scraping novel: ${error}`);
             return '';
@@ -54,9 +52,12 @@ export class NovelFullService implements SourcesService{
         
 
     }
-    async getNovelsLatest(page:number): Promise<Novel[]>{
+
+    async getNovelsLatest(page:number): Promise<NovelsList>{
 
         let novels: Novel[]=[];
+        let novelsList: NovelsList={last_page:1,novels:[]};
+
         try {
             const url = 'latest-release-novel';
             const response = await this.http.get(`${this.baseUrl}/${url}?page=${page}`, this.http.headers);
@@ -72,22 +73,29 @@ export class NovelFullService implements SourcesService{
                 let novel :Novel= {title:"",author:"",url:""};
                 novel.title = $(row).find('.col-xs-7 a').text();
                 novel.url =  $(row).find('.col-xs-7 a').attr('href') as string;
+                novel.author = $(row).find('.author').text().trim();     
                 novels.push(novel);
             
             });
-            novels = await this.matchImg(novels)
-            return novels;
+            novels = await this.matchOthersParams(novels);
+            novelsList.novels = novels;
+            novelsList.last_page = Number($('li.last a').attr('data-page')) +1 ;
+            if(Number.isNaN(novelsList.last_page))   
+                novelsList.last_page = Number($('li.active a').last().attr('data-page')) +1 ;
+
+            return novelsList;
         } catch (error) {
             console.error(`Error scraping novel: ${error}`);
-            return novels;
+            return novelsList;
         }
         
     };
 
     
 
-    async getNovelsCompleted(page:number): Promise<Novel[]>{
+    async getNovelsCompleted(page:number): Promise<NovelsList>{
         let novels: Novel[]=[];
+        let novelsList: NovelsList={last_page:1,novels:[]};
         try {
             const url = 'completed-novel';
             const response = await this.http.get(`${this.baseUrl}/${url}?page=${page}`, this.http.headers);
@@ -100,23 +108,30 @@ export class NovelFullService implements SourcesService{
             const rows = listPage.find('.row');
             
             rows.each((i, row) =>  {
-                let novel :Novel= {title:"",url:""};
+                let novel :Novel= {title:"",author:"",url:""};
                 novel.title = $(row).find('.col-xs-7 a').text();
                 novel.url =  $(row).find('.col-xs-7 a').attr('href') as string;
+                novel.author = $(row).find('.author').text().trim(); 
                 novels.push(novel);
             
             });
-            novels = await this.matchImg(novels)
-            return novels;
+            novels = await this.matchOthersParams(novels);
+            novelsList.novels = novels;
+            novelsList.last_page = Number($('li.last a').attr('data-page')) +1 ;
+            if(Number.isNaN(novelsList.last_page))   
+                novelsList.last_page = Number($('li.active a').last().attr('data-page')) +1 ;
+
+            return novelsList;
         } catch (error) {
-            return novels;
+            return novelsList;
         }
         
         
     };
 
-    async getNovelsPopular(page:number): Promise<Novel[]>{
+    async getNovelsPopular(page:number): Promise<NovelsList>{
         let novels: Novel[]=[];
+        let novelsList: NovelsList={last_page:1,novels:[]};
         try {
             const url = 'most-popular';
             const response = await this.http.get(`${this.baseUrl}/${url}?page=${page}`, this.http.headers);
@@ -129,22 +144,29 @@ export class NovelFullService implements SourcesService{
             const rows = listPage.find('.row');
             
             rows.each((i, row) =>  {
-                let novel :Novel= {title:"",url:""};
+                let novel :Novel= {title:"",author:"",url:""};
                 novel.title = $(row).find('.col-xs-7 a').text();
                 novel.url =  $(row).find('.col-xs-7 a').attr('href') as string;
+                novel.author = $(row).find('.author').text().trim(); 
                 novels.push(novel);
             
             });
-            novels = await this.matchImg(novels)
-            return novels;
+            novels = await this.matchOthersParams(novels);
+            novelsList.novels = novels;
+            novelsList.last_page = Number($('li.last a').attr('data-page')) +1 ;
+            if(Number.isNaN(novelsList.last_page))   
+                novelsList.last_page = Number($('li.active a').last().attr('data-page')) +1 ;
+
+            return novelsList;
         } catch (error) {
-            return novels;
+            return novelsList;
         }
         
         
     };
-    async searchWithKeyword(keyword:string,page:number): Promise<Novel[]>{
+    async searchWithKeyword(keyword:string,page:number): Promise<NovelsList>{
         let novels: Novel[]=[];
+        let novelsList: NovelsList={last_page:1,novels:[]};
         try {
             const url = 'search?keyword=';
             const keywordPlus = keyword.replace(/\s+/g, "+");
@@ -162,19 +184,25 @@ export class NovelFullService implements SourcesService{
                 let novel :Novel= {title:"",url:""};
                 novel.title = $(row).find('.col-xs-7 a').text();
                 novel.url =  $(row).find('.col-xs-7 a').attr('href') as string;
+                novel.author = $(row).find('.author').text().trim(); 
                 novels.push(novel);
             
             });
-            novels = await this.matchImg(novels)
-            
-            return novels;
+            novels = await this.matchOthersParams(novels);
+            novelsList.novels = novels;
+            novelsList.last_page = Number($('li.last a').attr('data-page')) +1 ;
+            if(Number.isNaN(novelsList.last_page))   
+                novelsList.last_page = Number($('li.active a').last().attr('data-page')) +1 ;
+
+            return novelsList;
         } catch (error) {
-            return novels;
+            return novelsList;
         }
     };
 
-    async searchWithGenre(genre:string,page:number): Promise<Novel[]>{
+    async searchWithGenre(genre:string,page:number): Promise<NovelsList>{
         let novels: Novel[]=[];
+        let novelsList: NovelsList={last_page:1,novels:[]};
         try {
             const url = 'genre';
             const response = await this.http.get(`${this.baseUrl}/${url}/${genre}?page=${page}`, this.http.headers);
@@ -191,14 +219,19 @@ export class NovelFullService implements SourcesService{
                 let novel :Novel= {title:"",url:""};
                 novel.title = $(row).find('.col-xs-7 a').text();
                 novel.url =  $(row).find('.col-xs-7 a').attr('href') as string;
+                novel.author = $(row).find('.author').text().trim(); 
                 novels.push(novel);
             
             });
-            novels = await this.matchImg(novels)
-            
-            return novels;
+            novels = await this.matchOthersParams(novels);
+            novelsList.novels = novels;
+            novelsList.last_page = Number($('li.last a').attr('data-page')) +1 ;
+            if(Number.isNaN(novelsList.last_page))   
+                novelsList.last_page = Number($('li.active a').last().attr('data-page')) +1 ;
+
+            return novelsList;
         } catch (error) {
-            return novels;
+            return novelsList;
         }
     };
     async getNovel(novelUrl: string,page:number) : Promise<Novel>{

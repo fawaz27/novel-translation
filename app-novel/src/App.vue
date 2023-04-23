@@ -34,6 +34,7 @@
 							:value="novel.value" 
 							style="font-size: 18px;"
 							active-color="blue-darken-2"
+							@click="getNovelsList(novel.value)"
 						>
 						</v-list-item>
 					</v-list>
@@ -75,8 +76,8 @@
 			<v-col cols="2"  class="d-flex justify-end" >
 				
 				<v-btn icon >
-					
-					<v-badge :content="7" class="mr-4" color="error">
+
+					<v-badge :content="4" class="mr-4" color="error">
 						<v-icon icon="mdi-bell" size="x-large"></v-icon>
 					</v-badge>
 				</v-btn>
@@ -123,6 +124,7 @@
 				:title="novel.title"
 				:value="novel.value" 
 				style="font-size: 18px;"
+				@click="getNovelsList(novel.value)"
 				active-color="blue-darken-2"
 			>
 			</v-list-item>
@@ -206,7 +208,6 @@ export default {
     // scrolled: false
   }),
   mounted() {
-	console.log(this.$vuetify.display.width <=961);
   },
   methods: {
 	searchAction(){
@@ -217,7 +218,21 @@ export default {
     },
     clear() {
         this.searchText = '';
-    }
+    },
+	async getNovelsList(listName){
+		this.$router.push({
+					name : 'novelsList',
+					params:{list_name: listName} 
+		});
+		try {
+			await this.$store.dispatch('getNovelsList',{listName:listName,page:1});
+			if(this.status == 'Success Get Novels List'){
+				console.log(`Good loading list ${this.$route.params.list_name} novel`);		
+			}		
+		} catch (error) {
+			console.error(error);
+		}
+	}
   },
   computed:{
     ...mapState(['user','Theme'])

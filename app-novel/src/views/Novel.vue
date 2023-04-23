@@ -293,16 +293,17 @@
 
                     <v-window-item :value="2" >
                         <v-container>
-                            <div v-if="chaptersCurrentNovel.length==0" class="text-center">
-                                <v-progress-circular
-                                    :size="70"
-                                    :width="7"
-                                    color="blue-darken-2"
-                                    indeterminate
-                                ></v-progress-circular>
-                            </div>
-                            <div v-else>
-                                
+                            
+                            <div >
+                                <div v-if="chaptersCurrentNovel.length==0" class="text-center">
+                                    <v-progress-circular
+                                        :size="70"
+                                        :width="7"
+                                        color="blue-darken-2"
+                                        indeterminate
+                                    ></v-progress-circular>
+                                </div>
+                                <div v-else>
                                 <div class="d-flex justify-start  ml-4" style="height: 40px;">
                                     <v-checkbox  v-model="selectedAll"  label="Check all" @change="toogleSelectedAll"  > </v-checkbox>
                                 </div>
@@ -343,7 +344,7 @@
                                                                         :title="chapter.title" 
                                                                         style="font-size: 19px;"
                                                                     >
-                                                                    <v-icon icon="mdi-book" size="x-small"></v-icon>
+                                                                    <v-icon icon="mdi-book" size="x-small" class="mr-2"></v-icon>
                                                                         {{ chapter.title.replaceAll('-',' ') }}
                                                                     </span>                                                                         
                                                             </div>
@@ -391,7 +392,7 @@
                                                                         :title="chapter.title" 
                                                                         style="font-size: 19px;"
                                                                     >
-                                                                    <v-icon icon="mdi-book" size="x-small"></v-icon>
+                                                                    <v-icon icon="mdi-book" size="x-small" class="mr-2"></v-icon>
                                                                         {{ chapter.title.replaceAll('-',' ') }}
                                                                     </span>                                                                         
                                                             </div>
@@ -407,22 +408,13 @@
                                 </v-col>
 
                                 </v-row>
+                                </div>
+                                
 
                                 <div class="text-center">
                                     <v-container>
-                                    <v-row justify="center">
-                                        <v-col cols="8">
-                                        <v-container class="">
-                                            <v-pagination
-                                            v-model="page"
-                                            class="my-4"
-                                            v
-                                            :length="last_page"
-                                            @update:model-value="updateData"
-                                            ></v-pagination>
-                                        </v-container>
-                                        </v-col>
-                                    </v-row>
+                                    <pagination :last_page="last_page" @update-page="UpdatePage" ></pagination>
+                                    
                                     </v-container>
                                 </div>
                             </div>
@@ -445,6 +437,8 @@
 import { mapMutations, mapState } from 'vuex'
 import api from "../api";
 import JSZip from 'jszip';
+import Pagination from '../components/Pagination.vue';
+
 export default {
     name: 'novel-view',
     props:{
@@ -453,7 +447,7 @@ export default {
         },
     },
     components: {
-
+        Pagination
     },
     mounted () {
         
@@ -537,7 +531,7 @@ export default {
         }
     },
     methods:{
-        ...mapMutations(['setPage','setNovels','setchapterscurrentNovel']),
+        ...mapMutations(['setNovels','setchapterscurrentNovel']),
 
         async downloadChapter(link){
                 try {
@@ -574,20 +568,14 @@ export default {
                 } catch (error) {
                     console.error(error);
                 }
-        } ,
-        async updateData(page) {
-            this.setPage(page);
+        },	
+		async UpdatePage(newPage) {
+            console.log(newPage +' novel');
+			this.page = newPage;
             this.setchapterscurrentNovel([]);
-            try {
-                await this.updateListChapters();		
-            } catch (error) {
-                console.error(error);
-                setTimeout(() => {
-                this.updateData(page);
-                }, 5000);
-            }
-        },
+            await this.updateListChapters();
 
+		},
         async updateListChapters(){
             try {
                     await this.$store.dispatch('getNovel',{title:this.$route.params.name,page:this.page});
@@ -600,6 +588,9 @@ export default {
                     console.error(error);
                 }
         },
+
+
+
 
         async downloadSelectedChapters(chapters) {
 

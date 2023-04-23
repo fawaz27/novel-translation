@@ -39,7 +39,11 @@ export default createStore({
         chaptersCurrentNovel:[],
         chapters_one:[],
         chapters_two:[],
-        last_page:0,
+        last_page:10,
+        last_pageLatest:1,
+        last_pageCompleted:1,
+        last_pagePopular:1,
+        pageLatest:1,
         pagePopular:1,
         pageCompleted:1,
         contentChapterCurrent:{}
@@ -68,8 +72,24 @@ export default createStore({
         }
     },
     mutations:{
+        setLastPagePopular : function (state,page){
+            state.last_pagePopular = page;
+        },
+        setLastPageCompleted : function (state,page){
+            state.last_pageCompleted = page;
+        },
+        
+        setLastPageLatest : function (state,page){
+            state.last_pageLatest = page;
+        },
+        setLastPage : function (state,page){
+            state.last_page = page;
+        },
         setPage : function (state,page){
             state.page = page;
+        },
+        setPageLatest : function (state,page){
+            state.pageLatest = page;
         },
         setPageCompleted : function (state,page){
             state.pageCompleted = page;
@@ -234,13 +254,14 @@ export default createStore({
             }
               
         },
-        getNovelsLatest : async ({commit,state})=>{
+        getNovelsLatest : async ({commit,state},page)=>{
            
             try {
-                const response = await api.get(`novels/${state.sourceName}?page=${state.page}`);
+                const response = await api.get(`novels/${state.sourceName}/novel-list/latest?page=${page}`);
                 if (response.status == 200) {
                     commit('setStatus','Success Get Novels Latest');
-                    commit('updateNovels',response.data);
+                    commit('updateNovels',response.data.novels);
+                    commit('setLastPageLatest',response.data.last_page);
 
                 }
                 else {
@@ -255,11 +276,11 @@ export default createStore({
         getNovelsCompleted : async ({commit,state})=>{
            
             try {
-                const response = await api.get(`novels/${state.sourceName}/completed?page=${state.page}`);
+                const response = await api.get(`novels/${state.sourceName}/novel-list/completed?page=${state.page}`);
                 if (response.status == 200) {
                     commit('setStatusCompleted','Success Get Novels Completed');
-                    commit('updateNovelsCompleted',response.data);
-
+                    commit('updateNovelsCompleted',response.data.novels);
+                    commit('setLastPageCompleted',response.data.last_page);
                 }
                 else {
                     commit('setStatusCompleted','Failure');
@@ -273,14 +294,32 @@ export default createStore({
         getNovelsPopular : async ({commit,state})=>{
            
             try {
-                const response = await api.get(`novels/${state.sourceName}/popular?page=${state.page}`);
+                const response = await api.get(`novels/${state.sourceName}/novel-list/popular?page=${state.page}`);
                 if (response.status == 200) {
                     commit('setStatusPopular','Success Get Novels Popular');
-                    commit('updateNovelsPopular',response.data);
-
+                    commit('updateNovelsPopular',response.data.novels);
+                    commit('setLastPagePopular',response.data.last_page);
                 }
                 else {
                     commit('setStatusPopular','Failure');
+                }
+              
+            } catch (error) {
+                console.error(error);
+                commit('setStatus','Failure')
+            }
+        },
+        getNovelsList : async ({commit,state},params)=>{
+           
+            try {
+                const response = await api.get(`novels/${state.sourceName}/novel-list/${params.listName}?page=${params.page}`);
+                if (response.status == 200) {
+                    commit('setStatusPopular','Success Get Novels List');
+                    commit('updateNovels',response.data.novels);
+                    commit('setLastPage',response.data.last_page);
+                }
+                else {
+                    commit('setStatus','Failure');
                 }
               
             } catch (error) {

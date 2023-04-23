@@ -5,6 +5,9 @@ import Login from './views/Login.vue'
 import Register from './views/Register.vue'
 import Novel from './views/Novel.vue'
 import Chapter from './views/Chapter.vue'
+import NovelsList from './views/NovelsList.vue'
+import GenreNovelsList from './views/GenreNovelsList.vue'
+import SearchNovelsList from './views/SearchNovelsList.vue'
 import {createRouter,createWebHistory} from 'vue-router'
 const routes = [
     {
@@ -49,6 +52,24 @@ const routes = [
         path:'/novels/:name/:chapter',
         name:'chapter',
         component:Chapter,
+        exact: true
+    },
+    {
+        path:'/genres/:genre_name/:number_page?',
+        name:'genreNovelsList',
+        component:GenreNovelsList,
+        exact: true
+    },
+    {
+        path:'/novel-list/:list_name/:number_page?',
+        name:'novelsList',
+        component:NovelsList,
+        exact: true
+    },
+    {
+        path:'/search/:number_page?',
+        name:'searchNovelsList',
+        component:SearchNovelsList,
         exact: true
     }
 ]

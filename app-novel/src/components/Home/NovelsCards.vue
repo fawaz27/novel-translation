@@ -1,132 +1,119 @@
 <template>
   
-    <v-container>
+    <v-container style="width: 100%;">
 
-      <div v-if="novels.length==0" class="text-center">
-          <v-progress-circular
-            :size="70"
-            :width="7"
-            color="blue-darken-2"
-            indeterminate
-          ></v-progress-circular>
-      </div>
-      <div v-else>
-        <v-row  justify-end>
-                <v-col
-                  v-for="(novel,index) in novels"  :key="index"
-                  xs="6" sm="4" md="3" lg="2" 
-                  
-                >
-                <div class="d-flex justify-center">
-                  <v-card height="250" width="170" class="card" 
-                  :to="{name:'novel',params:{name:novel.title}}">
-                      <v-img
-                        :src="novel.coverImageUrl"
-                        class="bg-white image"
-                        height="250"
-                        lazy-src="https://picsum.photos/id/11/100/60"
-                        cover
-                        
-                      >
-                        <template v-slot:placeholder>
-                          <div class="d-flex align-center justify-center fill-height">
-                            <v-progress-circular
-                              color="grey-lighten-4"
-                              indeterminate
-                            ></v-progress-circular>
-                          </div>
-                        </template>
-                      </v-img>
-                    </v-card>
-                </div>
-                <div class="d-flex justify-center"  >
-                    <div class="text-truncate font-weight-bold title" 
-                      @click="$router.push({ name: 'novel', params:{name: novel.title } })" 
-                      >
-                      {{ novel.title }}
-                    </div>
-                </div >
-          
-                </v-col>
-        </v-row>
-
-        <div class="text-center">
-          <v-container>
-            <v-row justify="center">
-              <v-col cols="8">
-                <v-container class="max-width">
-                  <v-pagination
-                    v-model="page"
-                    class="my-4"
-                    :length="30"
-                    @update:model-value="updateData"
-                  ></v-pagination>
-                </v-container>
-              </v-col>
-            </v-row>
-          </v-container>
-        </div>
-      </div>
       
-  </v-container>
+      <v-col
+             
+              class="mt-4 d-flex justify-space-between"
+              cols="12"
+				style="border-bottom: 1px solid #ccc;"           
+			>
+				<span class="text-h5 text-uppercase" >{{title}}</span >
+				<span class="text-h5 title" style="color: #4179E2;" @click="getNovelsList(value)" >See More</span >
+      </v-col>
+  
+			<div v-if="novels.length==0" 
+				class="d-flex align-center  justify-center" 
+				style="width: 100%;height: 150px;" 
+			>
+				<div  >
+					<v-progress-circular
+						:size="100"
+						:width="7"
+						color="blue-darken-2"
+						indeterminate
+					></v-progress-circular>
+				</div>
+				
+			</div>
+      <v-row class="mt-4">
+          <v-col
+            v-for="(novel,index) in novels.slice(0, 16)"  
+            :key="index"
+            cols="6" 
+            sm = "4"
+            md="3"
+            lg="2"
+            xl="1"
+          
+          >
+				<div class="d-flex justify-center">
+				<v-card height="250" width="170" class="card" 
+					:to="{name:'novel',params:{name:novel.title}}">
+						<v-img
+							:src="novel.coverImageUrl"
+							class="bg-white image"
+							height="250"
+							lazy-src="https://picsum.photos/id/11/100/60"
+							cover
+							
+						>
+							<template v-slot:placeholder>
+							<div class="d-flex align-center justify-center fill-height">
+								<v-progress-circular
+								color="grey-lighten-4"
+								indeterminate
+								></v-progress-circular>
+							</div>
+							</template>
+						</v-img>
+				</v-card> 
+				</div>
+				
+				<div class="d-flex justify-center"  >
+						<div 
+						class="text-truncate font-weight-bold title text-capitalize" 
+						@click="$router.push({ name: 'novel', params:{name: novel.title } })"
+					
+						>
+						<span :title="novel.title.replaceAll('-', ' ')">{{  novel.title.replaceAll('-', ' ') }}</span> 
+						</div>
+				</div >
+			</v-col>
+      </v-row>
+			
+    </v-container>
     
 </template>
   
   <script>
-import { mapMutations, mapState } from 'vuex';
-  
   export default {
-    name: 'NovelsCards',
+    name: 'Novels-Cards',
   
     data: () => ({
-      currentPage: 1,
-      perPage: 8,
-      page:1
 
     }),
-    computed: {
-      pages () {
-        return Math.ceil(this.novels.length / this.perPage);
-      },
-      paginatedData () {
-        const start = (this.currentPage - 1) * this.perPage
-        return this.novels.slice(start, start + this.perPage);
-      },
-      formName(title){
-        return title.replaceAll(' ', '-');
-      },
-      ...mapState(['novels','status'])
+    props:{
+        novels: { 
+            type: Array,
+            required: true
+        },
+        title:{
+            type:String,
+            required:true
+        },
+        value:{
+            type:String,
+            required:true
+        }
     },
-
-    mounted : async function() {
-      try {
-				await this.$store.dispatch('getNovelsLatest');
-				if(this.status == 'Success Get Novels Latest'){
-					console.log('Good loading novels');
-          
+	methods:{
+		async getNovelsList(listName){
+			this.$router.push({
+						name : 'novelsList',
+						params:{list_name: listName} 
+			});
+			try {
+				await this.$store.dispatch('getNovelsList',{listName:listName,page:1});
+				if(this.status == 'Success Get Novels List'){
+					console.log(`Good loading list ${this.$route.params.list_name} novel`);		
 				}		
 			} catch (error) {
 				console.error(error);
 			}
-    },
-    methods: {
-      ...mapMutations(['setPage','setNovels']),
-      async updateData(page) {
-          this.setPage(page);
-          this.setNovels([]);
-          try {
-            await this.$store.dispatch('updateCurrentPage');
-            if(this.status == 'Success Get Novels Latest'){
-              console.log('Good loading novels');
-            }		
-          } catch (error) {
-            console.error(error);
-            setTimeout(() => {
-              this.updateData(page);
-            }, 5000);
-          }
-      }
-    }
+		}
+	}
   }
   </script>
 
@@ -139,21 +126,14 @@ import { mapMutations, mapState } from 'vuex';
       .title:hover{
         text-decoration: underline;
         cursor: pointer;
-      }
-      .image{
-        transition: 0.5s;
-      }
-      .image:hover{
-        transform: scale(1.1);
-        box-shadow: 0 0 40px -10px rgba(0,0,0,0.25);
-      }
-
-      .v-progress-circular {
-        margin: 1rem;
-      }
-
-
-
+      }     
       
+      @media (min-width: 1920px){
+		.v-col-xl-1 {
+			flex: 0 0 12.333%;
+			max-width: 12.3%;
+		}
+	}
+
   </style>
   
