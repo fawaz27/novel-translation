@@ -7,18 +7,81 @@
 			
 			<v-col cols="12" lg="8" :key="n" >
 
-				<div v-if="novels.length==0" class="text-center">
-						<v-progress-circular
-							:size="70"
-							:width="7"
-							color="blue-darken-2"
-							indeterminate
-						></v-progress-circular>
-				</div>
-				<v-row v-else>
-					<v-col cols="12" sm="6"  >
+				<v-row v-if="novels.length==0">
+					<v-col cols="12" sm="6"  v-for="n in 20" :key="n" >
 
-						<v-col cols="12"   v-for="(novel, index) in novels.slice(0,novels.length/2)" :key="index">
+						
+							<v-card height="180">
+							<div class="content-card">
+								<div  class="left-card" >
+									<v-img
+									class="bg-white fill-height fill-width"
+									aspect-ratio="16/9"
+									cover			
+									lazy-src="https://picsum.photos/id/11/100/60"
+									></v-img>
+								</div>
+
+								<div  class="right-card" >
+									<v-card-item>
+										<div 
+											class="font-weight-bold title text-capitalize" 
+											
+										
+											>
+											<!-- <h3 :title="novel.title.replaceAll('-', ' ')">{{  novel.title.replaceAll('-', ' ') }}></h3> -->
+											<v-sheet  
+												style="height: 10px; width: 300px;"
+												color="grey-lighten-3"
+											></v-sheet>
+											<v-sheet 
+												class="mt-2" 
+												style="height: 10px; width: 300px;"
+												color="grey-lighten-3"
+											></v-sheet>
+
+										</div>
+									</v-card-item>
+									<v-card-text>
+										<div  style="overflow: hidden;">
+											<div class="tit-infos-loading mb-3"> 
+												<v-icon icon="mdi-pencil" class="mr-2" size="small"></v-icon> 
+												<v-sheet
+												class="mt-1" 
+												style=" height: 10px; width: 150px;" 
+												color="grey-lighten-3"
+												></v-sheet>
+											</div>
+											<div  class="tit-infos-loading mb-3"> 
+												<v-icon icon="mdi-progress-clock" class="mr-2" size="small"></v-icon> 
+												<v-sheet
+												class="mt-1" 
+												style="height: 10px; width: 150px;" 
+												color="grey-lighten-3"
+												></v-sheet>
+											</div>
+											<div class="tit-infos-loading mb-3	"> 
+												<v-icon icon="mdi-book" class="mr-2" size="small"></v-icon> 
+												<v-sheet
+												class="mt-1"
+												style="height: 10px; width: 150px;"  
+												color="grey-lighten-3"
+												></v-sheet>
+											</div>
+										</div>
+									</v-card-text>
+								</div>
+							</div>
+						</v-card>
+						
+					
+					</v-col>
+					
+				</v-row>
+				<v-row v-else>
+					<v-col cols="12" sm="6"  v-for="(novel, index) in novels" :key="index" >
+
+						
 							<v-card height="180">
 							<div class="content-card">
 								<div  class="left-card" >
@@ -55,51 +118,10 @@
 								</div>
 							</div>
 						</v-card>
-						</v-col>
+						
 					
 					</v-col>
-					<v-col cols="12" sm="6"  >
-
-						<v-col cols="12"   v-for="(novel, index) in novels.slice(novels.length/2)" :key="index">
-							<v-card height="180">
-							<div class="content-card">
-								<div  class="left-card" >
-									<v-img
-									class="bg-white fill-height fill-width"
-									aspect-ratio="16/9"
-									cover
-									:src="novel.coverImageUrl"
-									lazy-src="https://picsum.photos/id/11/100/60"
-									></v-img>
-								</div>
-
-								<div  class="right-card" >
-									<v-card-item>
-										<div 
-											class="font-weight-bold title text-capitalize" 
-											@click="$router.push({ name: 'novel', params:{name: novel.title } })"
-										
-											>
-											<!-- <h3 :title="novel.title.replaceAll('-', ' ')">{{  novel.title.replaceAll('-', ' ') }}></h3> -->
-											<h3 class="tit" :title="novel.title.replaceAll('-', ' ')">
-												{{  novel.title.replaceAll('-', ' ') }}
-											</h3> 
-
-										</div>
-									</v-card-item>
-									<v-card-text>
-										<div  style="overflow: hidden;">
-											<div class="tit-infos mb-2"> <v-icon icon="mdi-pencil" size="small"></v-icon> {{  novel.author }}</div>
-											<div class="tit-infos mb-2"> <v-icon icon="mdi-progress-clock" size="small"></v-icon> {{  novel.status }}</div>
-											<div class="tit-infos mb-2"> <v-icon icon="mdi-book" size="small"></v-icon> {{  novel.status }}</div>
-										</div>
-									</v-card-text>
-								</div>
-							</div>
-						</v-card>
-						</v-col>
-
-					</v-col>
+					
 				</v-row>
 				<div>
 					<pagination :page="page" :last_page="last_page" @update-page="UpdatePage" ></pagination>
@@ -118,10 +140,10 @@
 						</div>
 						<ul class="ul-list3">
 							<li class="l1" v-for="(item,index) in genres" :key="index">
-							<a :href="item.link" class="con text-capitalize" :title="item.name" >
+							<router-link :to="item.link" class="con text-capitalize" :title="item.name" >
 								<span class="glyphicon glyphicon-ok-sign"></span>
 								<font style="vertical-align: inherit;">{{item.name}}</font>
-							</a>
+							</router-link>
 							</li>
 						</ul>
 				</div>
@@ -315,6 +337,17 @@ import Pagination from './Pagination.vue'
 		overflow: hidden;
 		white-space: normal;
 		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 1;
+		font-size: 16px;
+		text-overflow: ellipsis;
+		word-break: break-word;
+	}
+
+	.tit-infos-loading{
+		overflow: hidden;
+		white-space: normal;
+		display: flex;
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp: 1;
 		font-size: 16px;

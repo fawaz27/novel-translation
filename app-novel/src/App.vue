@@ -52,16 +52,20 @@
 							</v-btn>
 						</template>
 
-						<v-list>
+						<v-list style="height: 340px;">
 							<v-list-item 
 								v-for="(genre,index) in genresList" 
 								:key="index" 
 								:title="genre.title"
 								:value="genre.value" 
 								style="font-size: 18px;"
+								active-color="blue-darken-2"
+								@click="getGenreNovelsList(genre.value)"
 							>
 							</v-list-item>
 						</v-list>
+
+						
 					</v-menu> 
 				</div>
 				
@@ -145,6 +149,8 @@
 				:title="genre.title"
 				:value="genre.value" 
 				style="font-size: 18px;"
+				active-color="blue-darken-2"
+				@click="getGenreNovelsList(genre.value)"
 			>
 			</v-list-item>
 		</v-list-group>   
@@ -204,6 +210,12 @@ export default {
 	{ title: 'Action', value:'action' },
 	{ title: 'Romance' , value:'romance' },
 	{ title: 'Wuxia', value:'wuxia' },
+	{ title: 'Action', value:'action' },
+	{ title: 'Romance' , value:'romance' },
+	{ title: 'Wuxia', value:'wuxia' },
+	{ title: 'Action', value:'action' },
+	{ title: 'Romance' , value:'romance' },
+	{ title: 'Wuxia', value:'wuxia' },
 	],
     // scrolled: false
   }),
@@ -224,14 +236,13 @@ export default {
 					name : 'novelsList',
 					params:{list_name: listName} 
 		});
-		try {
-			await this.$store.dispatch('getNovelsList',{listName:listName,page:1});
-			if(this.status == 'Success Get Novels List'){
-				console.log(`Good loading list ${this.$route.params.list_name} novel`);		
-			}		
-		} catch (error) {
-			console.error(error);
-		}
+	},
+
+	async getGenreNovelsList(genreName){
+		this.$router.push({
+					name : 'genreNovelsList',
+					params:{genre_name: genreName} 
+		});
 	}
   },
   computed:{
@@ -249,6 +260,15 @@ export default {
 		font-weight: 400;
 		line-height: 3rem;
 	} */
+
+	main {
+		font: 14px/1.5 Arial,sans-serif;
+			font-family: Arial, sans-serif;
+		
+		font-family: roboto condensed,helvetica neue,Helvetica,Arial,sans-serif;
+		-webkit-font-smoothing: antialiased;
+		
+	}
 	i{
 		
 		margin-inline-end: 12px;

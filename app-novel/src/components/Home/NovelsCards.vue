@@ -13,20 +13,58 @@
 				<span class="text-h5 title" style="color: #4179E2;" @click="getNovelsList(value)" >See More</span >
       </v-col>
   
-			<div v-if="novels.length==0" 
-				class="d-flex align-center  justify-center" 
-				style="width: 100%;height: 150px;" 
-			>
-				<div  >
-					<v-progress-circular
-						:size="100"
-						:width="7"
-						color="blue-darken-2"
-						indeterminate
-					></v-progress-circular>
+
+			
+		<v-row class="mt-4" v-if="novels.length==0">
+          <v-col
+            v-for="n in 16"  
+            :key="n"
+            cols="6" 
+            sm = "4"
+            md="3"
+            lg="2"
+            xl="1"
+          
+          >
+				<div class="d-flex justify-center">
+				<v-card height="250" width="170" class="card" 
+					>
+						<v-img
+							
+							class="bg-white image"
+							height="250"
+							lazy-src="https://picsum.photos/id/11/100/60"
+							cover
+							
+						>
+							<template v-slot:placeholder>
+							<div class="d-flex align-center justify-center fill-height">
+								<v-progress-circular
+								color="grey-lighten-4"
+								indeterminate
+								></v-progress-circular>
+							</div>
+							</template>
+						</v-img>
+						
+				</v-card> 
 				</div>
+				<div class="d-flex justify-center"  >
+						<div 
+						class="text-truncate font-weight-bold title text-capitalize" 
+						>
+						<v-sheet
+						class="mt-1"
+						style="height: 10px; width: 150px;"  
+						color="grey-lighten-3"
+						></v-sheet>
+						</div>
+				</div >
 				
-			</div>
+				
+			</v-col>
+      </v-row>
+
       <v-row class="mt-4">
           <v-col
             v-for="(novel,index) in novels.slice(0, 16)"  

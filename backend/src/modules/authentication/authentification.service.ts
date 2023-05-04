@@ -124,23 +124,5 @@ export class AuthentificationService{
         return options;
     }
 
-    // public createToken(user: User)
-    // {
-    //     const expiresIn = 3600;
-    //     const secret =  process.env.JWT_KEY;
-    //     const dataStoredInToken:DataStoredInToken= {
-    //         _id: String(user.id) ,
-    //     };
-    //     return {
-    //         expiresIn,
-    //         token: jwt.sign(dataStoredInToken,secret as string,{ expiresIn:`${expiresIn}s` }),
-    //     };
-    // }
-
-    // public createCookie(tokenData: TokenData )
-    // {
-    //     return `Authorization = ${tokenData.token}; HttpOnly; Max-Age = ${tokenData.expiresIn}`;
-    // }
-
 }
 

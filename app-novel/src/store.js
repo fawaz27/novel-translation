@@ -327,6 +327,24 @@ export default createStore({
                 commit('setStatus','Failure')
             }
         },
+        getNovelsGenre : async ({commit,state},params)=>{
+           
+            try {
+                const response = await api.get(`novels/${state.sourceName}/genre-list?genre=${params.genreName}&page=${params.page}`);
+                if (response.status == 200) {
+                    commit('setStatusPopular','Success Get Novels Genre');
+                    commit('updateNovels',response.data.novels);
+                    commit('setLastPage',response.data.last_page);
+                }
+                else {
+                    commit('setStatus','Failure');
+                }
+              
+            } catch (error) {
+                console.error(error);
+                commit('setStatus','Failure')
+            }
+        },
         getNovel : async ({commit,state},params)=>{
            
             try {
