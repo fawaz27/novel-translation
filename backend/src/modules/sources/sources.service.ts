@@ -20,6 +20,7 @@ interface SourcesService{
     getNovel(novelUrl: string,page:number) : Promise<Novel>;
     // getListChapterNovel(novelUrl: string) : Promise<Chapter[]>;
     getContentChapter(chapterUrl: string) : Promise<Content>;
+    getGenres() : Promise<String[]>;
 
 };
 

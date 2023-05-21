@@ -24,6 +24,6 @@ function validationMiddleware<T>(type: any, skipMissingProperties = false): expr
           }
         });
     };
-  }
+}
   
   export default validationMiddleware;

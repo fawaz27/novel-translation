@@ -29,6 +29,7 @@ export default createStore({
         cookies:[],
         Theme:'light',
         novels:[],
+        genres:[],
         novelsPopular:[],
         novelsCompleted:[],
         page:1,
@@ -260,6 +261,25 @@ export default createStore({
                 const response = await api.get(`novels/${state.sourceName}/novel-list/latest?page=${page}`);
                 if (response.status == 200) {
                     commit('setStatus','Success Get Novels Latest');
+                    commit('updateNovels',response.data.novels);
+                    commit('setLastPageLatest',response.data.last_page);
+
+                }
+                else {
+                    commit('setStatus','Failure');
+                }
+              
+            } catch (error) {
+                console.error(error);
+                commit('setStatus','Failure')
+            }
+        },
+        getGenres : async ({commit,state})=>{
+           
+            try {
+                const response = await api.get(`novels/${state.sourceName}/genres`);
+                if (response.status == 200) {
+                    commit('setStatus','Success Get Genres');
                     commit('updateNovels',response.data.novels);
                     commit('setLastPageLatest',response.data.last_page);
 

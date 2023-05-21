@@ -290,4 +290,21 @@ export class NovelFullService implements SourcesService{
             return content;
         }
     };
+    async getGenres() : Promise<String[]>{
+        try {
+            const response = await this.http.get(`${this.baseUrl}/genre/Harem`, this.http.headers);
+            let j = 0;
+            const $ = load(response.data);
+            const data = $('.visible-md-block.visible-lg-block.col-md-3.text-center.col-truyen-side');
+            const genres: string[] = [];
+            $('.col-xs-6 a').each((index, element) => {
+                const genre = $(element).text().trim();
+                j++
+                genres.push(genre);
+            });
+            return genres;
+        } catch (error) {
+            return [];
+        }
+    };
 }

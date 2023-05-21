@@ -25,6 +25,7 @@ export class NovelController{
         this.router.get(`${this.path}/genre-list`,this.searchWithGenre);
         this.router.get(`${this.path}/novel`,this.getNovelWithUrl);
         this.router.get(`${this.path}/chapter`,this.getChapterContent);
+        this.router.get(`${this.path}/genres`,this.getGenres);
         // this.router
         //     .get(
         //         `${this.path}User`,
@@ -43,6 +44,22 @@ export class NovelController{
         //     .get(`${this.path}/:id`,this.getNovelbyId)
         //     .put(`${this.path}/:id`,validationMiddleware(CreateNovelDto),this.updateNovel)
         //     .delete(`${this.path}/:id`,this.deleteNovel)
+    }
+
+    public async getGenres(req: Request, res: Response,next:NextFunction) {
+
+        const { source } = req.params;
+        
+        try {
+          
+            const sourceService = SourcesFactory.createSourceService(source);
+            console.log('Source url : '+sourceService.baseUrl);
+            const result = await sourceService.getGenres();
+            res.status(200).send(result);
+
+        } catch (error) {
+          next(error);
+        }
     }
 
     public async getNovelsLatest(req: Request, res: Response,next:NextFunction) {
